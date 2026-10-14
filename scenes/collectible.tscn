@@ -1,0 +1,33 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/collectible.gd" id="1_col"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_token"]
+radius = 0.9
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_token"]
+shading_mode = 0
+albedo_color = Color(1, 0.85, 0.25, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_coin"]
+material = SubResource("StandardMaterial3D_token")
+top_radius = 0.45
+bottom_radius = 0.45
+height = 0.12
+
+[node name="Collectible" type="Area3D" groups=["collectibles"]]
+collision_layer = 1
+collision_mask = 6
+script = ExtResource("1_col")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("SphereShape3D_token")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
+mesh = SubResource("CylinderMesh_coin")
+
+[node name="OmniLight3D" type="OmniLight3D" parent="."]
+light_color = Color(1, 0.85, 0.3, 1)
+light_energy = 1.6
+omni_range = 3.5

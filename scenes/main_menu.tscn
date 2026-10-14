@@ -1,0 +1,707 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/main_menu.gd" id="1_menu"]
+[ext_resource type="PackedScene" path="res://scenes/character_preview.tscn" id="2_prev"]
+
+[sub_resource type="Gradient" id="Gradient_bg"]
+colors = PackedColorArray(0.04, 0.05, 0.09, 1, 0.08, 0.07, 0.14, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_bg"]
+gradient = SubResource("Gradient_bg")
+fill_from = Vector2(0.5, 0)
+fill_to = Vector2(0.5, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_normal"]
+bg_color = Color(0.1, 0.13, 0.22, 0.9)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.25, 0.52, 0.85, 0.85)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_hover"]
+bg_color = Color(0.18, 0.32, 0.55, 0.98)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.45, 0.85, 1, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_modal"]
+bg_color = Color(0.06, 0.08, 0.12, 0.97)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.3, 0.65, 1, 0.95)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_card_active"]
+bg_color = Color(0.12, 0.18, 0.28, 0.9)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.4, 0.8, 1, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_card_inactive"]
+bg_color = Color(0.08, 0.09, 0.14, 0.75)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.2, 0.25, 0.35, 0.7)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[node name="MainMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_menu")
+
+[node name="Background" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("GradientTexture2D_bg")
+
+[node name="PrimaryMenu" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -260.0
+offset_top = -240.0
+offset_right = 260.0
+offset_bottom = 240.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 18
+alignment = 1
+
+[node name="TitleBox" type="VBoxContainer" parent="PrimaryMenu"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="TitleLabel" type="Label" parent="PrimaryMenu/TitleBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.4, 0.85, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.95)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 3
+theme_override_font_sizes/font_size = 40
+text = "SUPERHERO SHOWDOWN"
+horizontal_alignment = 1
+
+[node name="SubtitleLabel" type="Label" parent="PrimaryMenu/TitleBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.88, 0.95, 0.85)
+theme_override_font_sizes/font_size = 14
+text = "OPEN-WORLD CITY SANDBOX & FIGHTING ARENA"
+horizontal_alignment = 1
+
+[node name="Separator" type="HSeparator" parent="PrimaryMenu"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="CityBtn" type="Button" parent="PrimaryMenu"]
+custom_minimum_size = Vector2(0, 54)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_normal")
+text = "1. CITY"
+
+[node name="FightingBtn" type="Button" parent="PrimaryMenu"]
+custom_minimum_size = Vector2(0, 54)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_normal")
+text = "2. FIGHTING GAME"
+
+[node name="SettingsBtn" type="Button" parent="PrimaryMenu"]
+custom_minimum_size = Vector2(0, 54)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_normal")
+text = "3. SETTINGS"
+
+[node name="ExitBtn" type="Button" parent="PrimaryMenu"]
+custom_minimum_size = Vector2(0, 54)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_normal")
+text = "4. EXIT"
+
+[node name="CitySubmenu" type="PanelContainer" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -280.0
+offset_top = -210.0
+offset_right = 280.0
+offset_bottom = 210.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_modal")
+
+[node name="VBox" type="VBoxContainer" parent="CitySubmenu"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="SubmenuTitle" type="Label" parent="CitySubmenu/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.4, 0.85, 1, 1)
+theme_override_font_sizes/font_size = 24
+text = "EXPLORE COASTAL CITY"
+horizontal_alignment = 1
+
+[node name="SubmenuSubtitle" type="Label" parent="CitySubmenu/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.85, 0.9, 0.8)
+theme_override_font_sizes/font_size = 13
+text = "Select your sandbox experience"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="CitySubmenu/VBox"]
+layout_mode = 2
+
+[node name="CitySingleBtn" type="Button" parent="CitySubmenu/VBox"]
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_normal")
+text = "Single Player"
+
+[node name="CityDoubleBtn" type="Button" parent="CitySubmenu/VBox"]
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_normal")
+text = "Double Player"
+
+[node name="CityBackBtn" type="Button" parent="CitySubmenu/VBox"]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_normal")
+text = "Back"
+
+[node name="SinglePlayerModal" type="PanelContainer" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -480.0
+offset_top = -290.0
+offset_right = 480.0
+offset_bottom = 290.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_modal")
+
+[node name="VBox" type="VBoxContainer" parent="SinglePlayerModal"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Header" type="VBoxContainer" parent="SinglePlayerModal/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="Title" type="Label" parent="SinglePlayerModal/VBox/Header"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.4, 0.85, 1, 1)
+theme_override_font_sizes/font_size = 24
+text = "CHOOSE YOUR HERO — CITY FREE ROAM"
+horizontal_alignment = 1
+
+[node name="Desc" type="Label" parent="SinglePlayerModal/VBox/Header"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.85, 0.9, 0.8)
+theme_override_font_sizes/font_size = 13
+text = "Select a hero to inspect their live 3D suit and deploy into the coastal sandbox"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="SinglePlayerModal/VBox"]
+layout_mode = 2
+
+[node name="ContentRow" type="HBoxContainer" parent="SinglePlayerModal/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 20
+
+[node name="PreviewBox" type="VBoxContainer" parent="SinglePlayerModal/VBox/ContentRow"]
+custom_minimum_size = Vector2(340, 0)
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="LivePreview3D" parent="SinglePlayerModal/VBox/ContentRow/PreviewBox" instance=ExtResource("2_prev")]
+layout_mode = 2
+
+[node name="PreviewSubtitle" type="Label" parent="SinglePlayerModal/VBox/ContentRow/PreviewBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.6, 0.8, 1, 0.85)
+theme_override_font_sizes/font_size = 12
+text = "LIVE 3D SUIT TURNTABLE"
+horizontal_alignment = 1
+
+[node name="DetailsBox" type="VBoxContainer" parent="SinglePlayerModal/VBox/ContentRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 10
+
+[node name="SelectorButtons" type="HBoxContainer" parent="SinglePlayerModal/VBox/ContentRow/DetailsBox"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="PickWeaverBtn" type="Button" parent="SinglePlayerModal/VBox/ContentRow/DetailsBox/SelectorButtons"]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 15
+theme_override_styles/normal = SubResource("StyleBoxFlat_card_active")
+text = "CRIMSON WEAVER"
+
+[node name="PickKnightBtn" type="Button" parent="SinglePlayerModal/VBox/ContentRow/DetailsBox/SelectorButtons"]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 15
+theme_override_styles/normal = SubResource("StyleBoxFlat_card_inactive")
+text = "SHADOW KNIGHT"
+
+[node name="HeroName" type="Label" parent="SinglePlayerModal/VBox/ContentRow/DetailsBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.95, 1, 1)
+theme_override_font_sizes/font_size = 18
+text = "CRIMSON WEAVER"
+
+[node name="HeroTheme" type="Label" parent="SinglePlayerModal/VBox/ContentRow/DetailsBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.4, 0.85, 1, 1)
+theme_override_font_sizes/font_size = 13
+text = "Acrobatic Web-Slinger • Coastal Protector"
+
+[node name="HeroLore" type="Label" parent="SinglePlayerModal/VBox/ContentRow/DetailsBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.82, 0.85, 0.9, 0.9)
+theme_override_font_sizes/font_size = 12
+text = "Equipped with wrist-mounted web synthesizers. Uses agility and slingshot physics to navigate coastal skyscrapers."
+autowrap_mode = 3
+
+[node name="AbilitiesBox" type="VBoxContainer" parent="SinglePlayerModal/VBox/ContentRow/DetailsBox"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="TraversalInfo" type="Label" parent="SinglePlayerModal/VBox/ContentRow/DetailsBox/AbilitiesBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.85, 0.4, 1)
+theme_override_font_sizes/font_size = 12
+text = "TRAVERSAL: Web-Pull Slingshot & Double-Jump Flip"
+
+[node name="CombatInfo" type="Label" parent="SinglePlayerModal/VBox/ContentRow/DetailsBox/AbilitiesBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.85, 0.4, 1)
+theme_override_font_sizes/font_size = 12
+text = "SPECIAL ATTACK: 360° Web Burst (Restrains & slows hostile NPCs)"
+
+[node name="Spacer" type="Control" parent="SinglePlayerModal/VBox/ContentRow/DetailsBox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ActionRow" type="HBoxContainer" parent="SinglePlayerModal/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="StartCityBtn" type="Button" parent="SinglePlayerModal/VBox/ActionRow"]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 17
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_normal")
+text = "ENTER CITY SANDBOX"
+
+[node name="SpBackBtn" type="Button" parent="SinglePlayerModal/VBox/ActionRow"]
+custom_minimum_size = Vector2(160, 48)
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_normal")
+text = "Back"
+
+[node name="DoublePlayerModal" type="PanelContainer" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -520.0
+offset_top = -290.0
+offset_right = 520.0
+offset_bottom = 290.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_modal")
+
+[node name="VBox" type="VBoxContainer" parent="DoublePlayerModal"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Header" type="VBoxContainer" parent="DoublePlayerModal/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="Title" type="Label" parent="DoublePlayerModal/VBox/Header"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.4, 0.85, 1, 1)
+theme_override_font_sizes/font_size = 24
+text = "DOUBLE PLAYER — LOCAL CO-OP FREE ROAM"
+horizontal_alignment = 1
+
+[node name="Desc" type="Label" parent="DoublePlayerModal/VBox/Header"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.85, 0.9, 0.8)
+theme_override_font_sizes/font_size = 13
+text = "Select heroes independently for Player 1 and Player 2"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="DoublePlayerModal/VBox"]
+layout_mode = 2
+
+[node name="Columns" type="HBoxContainer" parent="DoublePlayerModal/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 30
+
+[node name="P1Column" type="VBoxContainer" parent="DoublePlayerModal/VBox/Columns"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+
+[node name="P1Title" type="Label" parent="DoublePlayerModal/VBox/Columns/P1Column"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.4, 0.85, 1, 1)
+theme_override_font_sizes/font_size = 16
+text = "PLAYER 1 (LEFT SCREEN / WASD)"
+horizontal_alignment = 1
+
+[node name="P1Preview" parent="DoublePlayerModal/VBox/Columns/P1Column" instance=ExtResource("2_prev")]
+custom_minimum_size = Vector2(180, 220)
+layout_mode = 2
+
+[node name="P1Buttons" type="HBoxContainer" parent="DoublePlayerModal/VBox/Columns/P1Column"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="P1WeaverBtn" type="Button" parent="DoublePlayerModal/VBox/Columns/P1Column/P1Buttons"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 13
+theme_override_styles/normal = SubResource("StyleBoxFlat_card_active")
+text = "CRIMSON WEAVER"
+
+[node name="P1KnightBtn" type="Button" parent="DoublePlayerModal/VBox/Columns/P1Column/P1Buttons"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 13
+theme_override_styles/normal = SubResource("StyleBoxFlat_card_inactive")
+text = "SHADOW KNIGHT"
+
+[node name="P2Column" type="VBoxContainer" parent="DoublePlayerModal/VBox/Columns"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+
+[node name="P2Title" type="Label" parent="DoublePlayerModal/VBox/Columns/P2Column"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.75, 0.25, 1)
+theme_override_font_sizes/font_size = 16
+text = "PLAYER 2 (RIGHT SCREEN / IJKL)"
+horizontal_alignment = 1
+
+[node name="P2Preview" parent="DoublePlayerModal/VBox/Columns/P2Column" instance=ExtResource("2_prev")]
+custom_minimum_size = Vector2(180, 220)
+layout_mode = 2
+hero_type = "shadow_knight"
+
+[node name="P2Buttons" type="HBoxContainer" parent="DoublePlayerModal/VBox/Columns/P2Column"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="P2WeaverBtn" type="Button" parent="DoublePlayerModal/VBox/Columns/P2Column/P2Buttons"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 13
+theme_override_styles/normal = SubResource("StyleBoxFlat_card_inactive")
+text = "CRIMSON WEAVER"
+
+[node name="P2KnightBtn" type="Button" parent="DoublePlayerModal/VBox/Columns/P2Column/P2Buttons"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 13
+theme_override_styles/normal = SubResource("StyleBoxFlat_card_active")
+text = "SHADOW KNIGHT"
+
+[node name="DpActionRow" type="HBoxContainer" parent="DoublePlayerModal/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Launch2PBtn" type="Button" parent="DoublePlayerModal/VBox/DpActionRow"]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 17
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_normal")
+text = "LAUNCH 2-PLAYER CO-OP CITY"
+
+[node name="DpBackBtn" type="Button" parent="DoublePlayerModal/VBox/DpActionRow"]
+custom_minimum_size = Vector2(160, 48)
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_normal")
+text = "Back"
+
+[node name="FightingSubmenu" type="PanelContainer" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -340.0
+offset_top = -240.0
+offset_right = 340.0
+offset_bottom = 240.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_modal")
+
+[node name="VBox" type="VBoxContainer" parent="FightingSubmenu"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="Title" type="Label" parent="FightingSubmenu/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.4, 0.4, 1)
+theme_override_font_sizes/font_size = 24
+text = "ROOFTOP FIGHTING ARENA"
+horizontal_alignment = 1
+
+[node name="Subtitle" type="Label" parent="FightingSubmenu/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.88, 0.95, 0.85)
+theme_override_font_sizes/font_size = 13
+text = "Select your fighting combat mode"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="FightingSubmenu/VBox"]
+layout_mode = 2
+
+[node name="SpFightBox" type="VBoxContainer" parent="FightingSubmenu/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="FightCpuBtn" type="Button" parent="FightingSubmenu/VBox/SpFightBox"]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+theme_override_font_sizes/font_size = 17
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_normal")
+text = "1 Player vs CPU"
+
+[node name="DiffRow" type="HBoxContainer" parent="FightingSubmenu/VBox/SpFightBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="DiffLabel" type="Label" parent="FightingSubmenu/VBox/SpFightBox/DiffRow"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.75, 0.85, 1)
+theme_override_font_sizes/font_size = 13
+text = "CPU Difficulty:"
+
+[node name="DiffEasy" type="Button" parent="FightingSubmenu/VBox/SpFightBox/DiffRow"]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 12
+text = "EASY"
+
+[node name="DiffNormal" type="Button" parent="FightingSubmenu/VBox/SpFightBox/DiffRow"]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 12
+text = "NORMAL"
+
+[node name="DiffHard" type="Button" parent="FightingSubmenu/VBox/SpFightBox/DiffRow"]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 12
+text = "HARD"
+
+[node name="HSeparator2" type="HSeparator" parent="FightingSubmenu/VBox"]
+layout_mode = 2
+
+[node name="Fight2PBtn" type="Button" parent="FightingSubmenu/VBox"]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+theme_override_font_sizes/font_size = 17
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_normal")
+text = "2 Players vs Each Other"
+
+[node name="HSeparator3" type="HSeparator" parent="FightingSubmenu/VBox"]
+layout_mode = 2
+
+[node name="FightingBackBtn" type="Button" parent="FightingSubmenu/VBox"]
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_normal")
+text = "Back"
+
+[node name="SettingsModal" type="PanelContainer" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -320.0
+offset_top = -240.0
+offset_right = 320.0
+offset_bottom = 240.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_modal")
+
+[node name="VBox" type="VBoxContainer" parent="SettingsModal"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="Title" type="Label" parent="SettingsModal/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.4, 0.85, 1, 1)
+theme_override_font_sizes/font_size = 24
+text = "GAME SETTINGS"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="SettingsModal/VBox"]
+layout_mode = 2
+
+[node name="Grid" type="GridContainer" parent="SettingsModal/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/h_separation = 16
+theme_override_constants/v_separation = 12
+columns = 2
+
+[node name="MasterVolLabel" type="Label" parent="SettingsModal/VBox/Grid"]
+layout_mode = 2
+text = "Master Volume:"
+
+[node name="MasterVolSlider" type="HSlider" parent="SettingsModal/VBox/Grid"]
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 1.0
+step = 0.05
+value = 0.8
+
+[node name="SfxVolLabel" type="Label" parent="SettingsModal/VBox/Grid"]
+layout_mode = 2
+text = "SFX Volume:"
+
+[node name="SfxVolSlider" type="HSlider" parent="SettingsModal/VBox/Grid"]
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 1.0
+step = 0.05
+value = 0.9
+
+[node name="TrafficLabel" type="Label" parent="SettingsModal/VBox/Grid"]
+layout_mode = 2
+text = "Traffic Density:"
+
+[node name="TrafficToggleBtn" type="Button" parent="SettingsModal/VBox/Grid"]
+layout_mode = 2
+text = "MEDIUM"
+
+[node name="PopLabel" type="Label" parent="SettingsModal/VBox/Grid"]
+layout_mode = 2
+text = "Citizens Density:"
+
+[node name="PopToggleBtn" type="Button" parent="SettingsModal/VBox/Grid"]
+layout_mode = 2
+text = "MEDIUM"
+
+[node name="SensLabel" type="Label" parent="SettingsModal/VBox/Grid"]
+layout_mode = 2
+text = "Camera Sensitivity:"
+
+[node name="SensSlider" type="HSlider" parent="SettingsModal/VBox/Grid"]
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = 0.001
+max_value = 0.008
+step = 0.0005
+value = 0.003
+
+[node name="SettingsBackBtn" type="Button" parent="SettingsModal/VBox"]
+custom_minimum_size = Vector2(0, 46)
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_normal")
+text = "Back"

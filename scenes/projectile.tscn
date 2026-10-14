@@ -1,0 +1,39 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/projectile.gd" id="1_script"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_1"]
+radius = 0.45
+
+[sub_resource type="SphereMesh" id="SphereMesh_core"]
+radius = 0.3
+height = 0.6
+
+[sub_resource type="BoxMesh" id="BoxMesh_blade1"]
+size = Vector3(0.8, 0.08, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_blade2"]
+size = Vector3(0.2, 0.08, 0.8)
+
+[node name="Projectile" type="Area3D"]
+collision_layer = 8
+collision_mask = 7
+script = ExtResource("1_script")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("SphereShape3D_1")
+
+[node name="VisualMesh" type="Node3D" parent="."]
+
+[node name="Core" type="MeshInstance3D" parent="VisualMesh"]
+mesh = SubResource("SphereMesh_core")
+
+[node name="Wing1" type="MeshInstance3D" parent="VisualMesh"]
+mesh = SubResource("BoxMesh_blade1")
+
+[node name="Wing2" type="MeshInstance3D" parent="VisualMesh"]
+mesh = SubResource("BoxMesh_blade2")
+
+[node name="OmniLight3D" type="OmniLight3D" parent="VisualMesh"]
+light_energy = 1.5
+omni_range = 3.0

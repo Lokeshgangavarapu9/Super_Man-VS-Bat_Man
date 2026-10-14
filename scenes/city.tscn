@@ -1,0 +1,421 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/city_manager.gd" id="1_city"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_coastal"]
+sky_top_color = Color(0.18, 0.38, 0.65, 1)
+sky_horizon_color = Color(0.7, 0.45, 0.35, 1)
+ground_bottom_color = Color(0.08, 0.1, 0.14, 1)
+ground_horizon_color = Color(0.35, 0.3, 0.32, 1)
+
+[sub_resource type="Sky" id="Sky_env"]
+sky_material = SubResource("ProceduralSkyMaterial_coastal")
+
+[sub_resource type="Environment" id="Environment_city"]
+background_mode = 2
+sky = SubResource("Sky_env")
+ambient_light_source = 2
+ambient_light_color = Color(0.4, 0.45, 0.55, 1)
+ambient_light_energy = 0.9
+tonemap_mode = 2
+glow_enabled = true
+glow_intensity = 0.4
+glow_bloom = 0.12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hp_bg"]
+bg_color = Color(0.1, 0.12, 0.16, 0.85)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_p1_hp"]
+bg_color = Color(0.15, 0.65, 1, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_p2_hp"]
+bg_color = Color(1, 0.75, 0.2, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_trail"]
+bg_color = Color(0.95, 0.3, 0.25, 0.75)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_card"]
+bg_color = Color(0.07, 0.08, 0.12, 0.88)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.3, 0.6, 0.9, 0.75)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_modal"]
+bg_color = Color(0.06, 0.07, 0.1, 0.96)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.35, 0.7, 1, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[node name="City" type="Node3D"]
+process_mode = 3
+script = ExtResource("1_city")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_city")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.866025, -0.25, 0.433013, 0, 0.866025, 0.5, -0.5, -0.433013, 0.75, 0, 30, 0)
+light_color = Color(1, 0.92, 0.82, 1)
+light_energy = 1.3
+shadow_enabled = true
+
+[node name="WorldContent" type="Node3D" parent="."]
+
+[node name="SplitScreenContainer" type="HBoxContainer" parent="."]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 4
+
+[node name="P1ViewportContainer" type="SubViewportContainer" parent="SplitScreenContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+stretch = true
+
+[node name="SubViewport" type="SubViewport" parent="SplitScreenContainer/P1ViewportContainer"]
+handle_input_locally = false
+size = Vector2i(1280, 720)
+render_target_update_mode = 4
+
+[node name="P2ViewportContainer" type="SubViewportContainer" parent="SplitScreenContainer"]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+stretch = true
+
+[node name="SubViewport" type="SubViewport" parent="SplitScreenContainer/P2ViewportContainer"]
+handle_input_locally = false
+size = Vector2i(638, 720)
+render_target_update_mode = 4
+
+[node name="HUD" type="CanvasLayer" parent="."]
+
+[node name="MarginContainer" type="MarginContainer" parent="HUD"]
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 90.0
+grow_horizontal = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 14
+theme_override_constants/margin_right = 20
+
+[node name="TopHeader" type="HBoxContainer" parent="HUD/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="P1Box" type="VBoxContainer" parent="HUD/MarginContainer/TopHeader"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 4
+
+[node name="P1NameLabel" type="Label" parent="HUD/MarginContainer/TopHeader/P1Box"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.4, 0.85, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.9)
+theme_override_font_sizes/font_size = 16
+text = "P1: CRIMSON WEAVER"
+
+[node name="P1HealthBar" type="ProgressBar" parent="HUD/MarginContainer/TopHeader/P1Box"]
+custom_minimum_size = Vector2(0, 22)
+layout_mode = 2
+theme_override_styles/background = SubResource("StyleBoxFlat_hp_bg")
+theme_override_styles/fill = SubResource("StyleBoxFlat_p1_hp")
+value = 100.0
+show_percentage = false
+
+[node name="DamageTrail" type="ProgressBar" parent="HUD/MarginContainer/TopHeader/P1Box/P1HealthBar"]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/background = SubResource("StyleBoxFlat_hp_bg")
+theme_override_styles/fill = SubResource("StyleBoxFlat_trail")
+value = 100.0
+show_percentage = false
+
+[node name="P1Cooldowns" type="Label" parent="HUD/MarginContainer/TopHeader/P1Box"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.9, 1, 0.85)
+theme_override_font_sizes/font_size = 11
+text = "[F] Strike | [G] Ranged: READY | [H] Special: READY | [R/RMB] Traversal: READY"
+
+[node name="CenterBox" type="VBoxContainer" parent="HUD/MarginContainer/TopHeader"]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+alignment = 1
+
+[node name="TokenLabel" type="Label" parent="HUD/MarginContainer/TopHeader/CenterBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.85, 0.25, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.9)
+theme_override_constants/shadow_offset_y = 2
+theme_override_font_sizes/font_size = 20
+text = "TOKENS: 0"
+horizontal_alignment = 1
+
+[node name="SectorLabel" type="Label" parent="HUD/MarginContainer/TopHeader/CenterBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.8, 0.9, 0.75)
+theme_override_font_sizes/font_size = 11
+text = "COASTAL DISTRICT"
+horizontal_alignment = 1
+
+[node name="P2Box" type="VBoxContainer" parent="HUD/MarginContainer/TopHeader"]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 4
+
+[node name="P2NameLabel" type="Label" parent="HUD/MarginContainer/TopHeader/P2Box"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.8, 0.3, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.9)
+theme_override_font_sizes/font_size = 16
+text = "P2: SHADOW KNIGHT"
+horizontal_alignment = 2
+
+[node name="P2HealthBar" type="ProgressBar" parent="HUD/MarginContainer/TopHeader/P2Box"]
+custom_minimum_size = Vector2(0, 22)
+layout_mode = 2
+theme_override_styles/background = SubResource("StyleBoxFlat_hp_bg")
+theme_override_styles/fill = SubResource("StyleBoxFlat_p2_hp")
+value = 100.0
+fill_mode = 1
+show_percentage = false
+
+[node name="DamageTrail" type="ProgressBar" parent="HUD/MarginContainer/TopHeader/P2Box/P2HealthBar"]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/background = SubResource("StyleBoxFlat_hp_bg")
+theme_override_styles/fill = SubResource("StyleBoxFlat_trail")
+value = 100.0
+fill_mode = 1
+show_percentage = false
+
+[node name="P2Cooldowns" type="Label" parent="HUD/MarginContainer/TopHeader/P2Box"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.9, 0.8, 0.85)
+theme_override_font_sizes/font_size = 11
+text = "[K] Strike | [L] Ranged: READY | [J] Special: READY | [U] Traversal: READY"
+horizontal_alignment = 2
+
+[node name="ObjectiveCard" type="PanelContainer" parent="HUD"]
+custom_minimum_size = Vector2(300, 95)
+offset_left = 20.0
+offset_top = 105.0
+offset_right = 320.0
+offset_bottom = 200.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_card")
+
+[node name="Margin" type="MarginContainer" parent="HUD/ObjectiveCard"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 10
+
+[node name="VBox" type="VBoxContainer" parent="HUD/ObjectiveCard/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="ObjectiveTitle" type="Label" parent="HUD/ObjectiveCard/Margin/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.85, 0.3, 1)
+theme_override_font_sizes/font_size = 14
+text = "FREE ROAM"
+
+[node name="ObjectiveDesc" type="Label" parent="HUD/ObjectiveCard/Margin/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.9, 0.95, 0.85)
+theme_override_font_sizes/font_size = 11
+text = "Explore the city, test powers, or find mission stations."
+autowrap_mode = 2
+
+[node name="ObjectiveStatus" type="Label" parent="HUD/ObjectiveCard/Margin/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.3, 0.85, 1, 1)
+theme_override_font_sizes/font_size = 11
+text = "Status: Exploring City District"
+
+[node name="InteractionPrompt" type="Label" parent="HUD"]
+visible = false
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -250.0
+offset_top = -80.0
+offset_right = 250.0
+offset_bottom = -46.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_colors/font_color = Color(1, 0.9, 0.3, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.95)
+theme_override_constants/shadow_offset_y = 2
+theme_override_font_sizes/font_size = 17
+text = "[E] START PARKOUR TIME TRIAL"
+horizontal_alignment = 1
+
+[node name="CenterBanner" type="CenterContainer" parent="HUD"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -300.0
+offset_top = -60.0
+offset_right = 300.0
+offset_bottom = 60.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="BannerLabel" type="Label" parent="HUD/CenterBanner"]
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.9, 0.25, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.95)
+theme_override_constants/shadow_offset_y = 3
+theme_override_font_sizes/font_size = 28
+text = "MISSION ACTIVE!"
+horizontal_alignment = 1
+
+[node name="BottomControls" type="MarginContainer" parent="HUD"]
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -34.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 8
+
+[node name="ControlsLabel" type="Label" parent="HUD/BottomControls"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.8, 0.9, 0.75)
+theme_override_font_sizes/font_size = 11
+text = "WASD Move • Mouse Look • Space Jump (Double-Jump) • Shift Sprint • F Strike • G Web/Batarang • H Special • R/RMB Slingshot/Grapple • E Interact • ESC Pause"
+
+[node name="PauseMenu" type="Control" parent="HUD"]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Dimmer" type="ColorRect" parent="HUD/PauseMenu"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.04, 0.05, 0.08, 0.85)
+
+[node name="Panel" type="Panel" parent="HUD/PauseMenu"]
+custom_minimum_size = Vector2(440, 360)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -220.0
+offset_top = -180.0
+offset_right = 220.0
+offset_bottom = 180.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_modal")
+
+[node name="VBox" type="VBoxContainer" parent="HUD/PauseMenu/Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 32.0
+offset_top = 26.0
+offset_right = -32.0
+offset_bottom = -26.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 14
+alignment = 1
+
+[node name="Title" type="Label" parent="HUD/PauseMenu/Panel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.35, 0.8, 1, 1)
+theme_override_font_sizes/font_size = 28
+text = "CITY SANDBOX PAUSED"
+horizontal_alignment = 1
+
+[node name="Sub" type="Label" parent="HUD/PauseMenu/Panel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.85, 0.95, 0.8)
+theme_override_font_sizes/font_size = 13
+text = "Coastal District • Sandbox Exploration"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="HUD/PauseMenu/Panel/VBox"]
+layout_mode = 2
+
+[node name="ResumeBtn" type="Button" parent="HUD/PauseMenu/Panel/VBox"]
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+text = "RESUME EXPLORATION"
+
+[node name="RestartBtn" type="Button" parent="HUD/PauseMenu/Panel/VBox"]
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+text = "RESPAWN AT PLAZA"
+
+[node name="MainMenuBtn" type="Button" parent="HUD/PauseMenu/Panel/VBox"]
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+text = "RETURN TO MAIN MENU"
