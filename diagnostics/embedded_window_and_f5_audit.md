@@ -31,7 +31,7 @@ A complete search across all GDScript files and scenes in the repository was con
 
 | Audit Item | Search Pattern | Project Scripts Occurrence | Finding & Validation |
 | --- | --- | --- | --- |
-| **Direct Tree Quit** | `get_tree().quit()` | 3 occurrences | Exclusively wired to explicit user button clicks:<br>1. [`scripts/main_menu.gd`](file:///c:/Users/LOKESH/gotbot%20game/scripts/main_menu.gd#L237-L239) (`exit_btn.pressed`)<br>2. [`scripts/pause_menu.gd`](file:///c:/Users/LOKESH/gotbot%20game/scripts/pause_menu.gd#L48-L49) (`exit_btn.pressed`)<br>3. [`scripts/game_manager.gd`](file:///c:/Users/LOKESH/gotbot%20game/scripts/game_manager.gd#L355-L357) (`exit_button.pressed`) |
+| **Direct Tree Quit** | `get_tree().quit()` | 3 occurrences | Exclusively wired to explicit user button clicks in [`scripts/main_menu.gd`](file:///c:/Users/LOKESH/gotbot%20game/scripts/main_menu.gd#L237-L239), [`scripts/pause_menu.gd`](file:///c:/Users/LOKESH/gotbot%20game/scripts/pause_menu.gd#L48-L49), and [`scripts/game_manager.gd`](file:///c:/Users/LOKESH/gotbot%20game/scripts/game_manager.gd#L355-L357). |
 | **OS Exit** | `OS.exit` / `OS.crash` | 0 occurrences | Zero calls to `OS.exit` in project codebase. |
 | **Automatic Exit Timers** | `create_timer`, `Timer` | 0 exit timers | All timers in [`scripts/player.gd`](file:///c:/Users/LOKESH/gotbot%20game/scripts/player.gd) and [`scripts/projectile.gd`](file:///c:/Users/LOKESH/gotbot%20game/scripts/projectile.gd) manage weapon cooldowns, stun durations, and coyote time. |
 | **Scene Transition Failures** | `change_scene_to_file` | 7 occurrences | Hardened with return code error checking and `push_error` logging in `main_menu.gd`, `pause_menu.gd`, `city_manager.gd`, and `game_manager.gd`. |
@@ -44,14 +44,14 @@ A complete search across all GDScript files and scenes in the repository was con
 
 ```gdscript
 static func can_control_window() -> bool:
-	if DisplayServer.get_name() == "headless":
-		return false
-	var tree := Engine.get_main_loop() as SceneTree
-	if not tree or not tree.root:
-		return false
-	if tree.root.is_embedded():
-		return false
-	return true
+    if DisplayServer.get_name() == "headless":
+        return false
+    var tree := Engine.get_main_loop() as SceneTree
+    if not tree or not tree.root:
+        return false
+    if tree.root.is_embedded():
+        return false
+    return true
 ```
 
 - When running embedded in the Godot Editor (`tree.root.is_embedded() == true`), `DisplayServer.window_set_size`, `window_set_mode`, `window_set_flag`, and `window_set_vsync_mode` are safely skipped.
@@ -81,6 +81,7 @@ A full F5 simulation test was performed by launching the Godot console executabl
 ## 5. Editor Guidance: How to Run in Separate Window
 
 To run the game in a separate window from the Godot Editor:
+
 1. In the top-right toolbar of the Godot Editor (next to the Play button), ensure the **Embed Game on Play** icon (window with arrow inside) is toggled **OFF**.
 2. Alternatively, open **Editor -> Editor Settings -> Run -> Window Placement**, and set:
    - **Rect:** Set desired window resolution.
