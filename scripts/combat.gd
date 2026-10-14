@@ -17,8 +17,10 @@ const PROJECTILE_COOLDOWN: float = 1.0
 const SPECIAL_COOLDOWN: float = 3.5
 const TRAVERSAL_COOLDOWN: float = 1.4
 
+const PC = preload("res://scripts/physics_config.gd")
+
 ## Helper function to calculate 3D knockback vector
-static func calculate_knockback(attacker_pos: Vector3, target_pos: Vector3, force: float, upward_lift: float = 4.5) -> Vector3:
+static func calculate_knockback(attacker_pos: Vector3, target_pos: Vector3, force: float, upward_lift: float = PC.KNOCKBACK_UPWARD_LIFT) -> Vector3:
 	var dir := (target_pos - attacker_pos)
 	dir.y = 0.0
 	if dir.length_squared() < 0.001:

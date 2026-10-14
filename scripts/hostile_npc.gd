@@ -11,8 +11,10 @@ enum State {
 	DEFEATED
 }
 
+const PC = preload("res://scripts/physics_config.gd")
+
 @export var max_health: float = 40.0
-@export var speed: float = 4.2
+@export var speed: float = PC.HOSTILE_NPC_SPEED
 @export var attack_damage: float = 8.0
 @export var detection_radius: float = 14.0
 @export var attack_radius: float = 1.8
@@ -148,7 +150,8 @@ func _notify_nearby_danger() -> void:
 
 func _physics_process(delta: float) -> void:
 	if not is_on_floor():
-		velocity.y -= 22.0 * delta
+		velocity.y -= PC.GRAVITY * delta
+		velocity.y = max(velocity.y, -PC.MAX_FALL_SPEED)
 		
 	if is_dead:
 		velocity.x = move_toward(velocity.x, 0.0, delta * 6.0)

@@ -1,14 +1,16 @@
 class_name ThirdPersonCamera
 extends Node3D
 
+const PC = preload("res://scripts/physics_config.gd")
+
 @export var target: Node3D = null
-@export var follow_speed: float = 14.0
-@export var mouse_sensitivity: float = 0.003
-@export var min_pitch: float = -60.0
-@export var max_pitch: float = 45.0
-@export var default_distance: float = 4.8
-@export var min_distance: float = 1.5
-@export var max_distance: float = 8.0
+@export var follow_speed: float = PC.CAM_FOLLOW_SPEED
+@export var mouse_sensitivity: float = PC.CAM_MOUSE_SENSITIVITY
+@export var min_pitch: float = PC.CAM_PITCH_MIN
+@export var max_pitch: float = PC.CAM_PITCH_MAX
+@export var default_distance: float = PC.CAM_DEFAULT_DIST
+@export var min_distance: float = PC.CAM_MIN_DIST
+@export var max_distance: float = PC.CAM_MAX_DIST
 
 @onready var spring_arm: SpringArm3D = $SpringArm3D
 @onready var camera: Camera3D = $SpringArm3D/Camera3D
@@ -22,6 +24,7 @@ func _ready() -> void:
 	if spring_arm:
 		spring_arm.spring_length = default_distance
 		spring_arm.margin = 0.25
+		spring_arm.collision_mask = 1 # Environment layer
 	# Capture mouse by default for seamless 3D control
 	if not Engine.is_editor_hint():
 		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
@@ -42,7 +45,10 @@ func _unhandled_input(event: InputEvent) -> void:
 func _physics_process(delta: float) -> void:
 	if target and is_instance_valid(target):
 		var target_pos := target.global_position + Vector3(0, 1.6, 0)
-		global_position = global_position.lerp(target_pos, follow_speed * delta)
+		if global_position.distance_squared_to(target_pos) > 225.0:
+			global_position = target_pos
+		else:
+			global_position = global_position.lerp(target_pos, follow_speed * delta)
 	
 	# Apply rotation from yaw and pitch
 	quaternion = Quaternion(Vector3.UP, yaw) * Quaternion(Vector3.RIGHT, pitch)

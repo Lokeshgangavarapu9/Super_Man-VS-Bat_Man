@@ -7,6 +7,7 @@ signal player_defeated(player_id: int)
 signal traversal_triggered(ability: String, target_point: Vector3)
 
 const CombatScript = preload("res://scripts/combat.gd")
+const PC = preload("res://scripts/physics_config.gd")
 const PROJECTILE_SCENE = preload("res://scenes/projectile.tscn")
 
 @export var player_id: int = 1 # 1 or 2
@@ -14,11 +15,12 @@ const PROJECTILE_SCENE = preload("res://scenes/projectile.tscn")
 @export var character_name: String = "Hero"
 @export var hero_type: String = "" # "crimson_weaver" or "shadow_knight"
 
-# Physics constants
-const SPEED: float = 8.5
-const SPRINT_SPEED: float = 14.0
-const JUMP_VELOCITY: float = 9.5
-const GRAVITY: float = 24.0
+# Physics constants — all values read from PhysicsConfig (physics_config.gd)
+# Do NOT add new hardcoded physics here; edit physics_config.gd instead.
+const SPEED: float = PC.PLAYER_WALK_SPEED
+const SPRINT_SPEED: float = PC.PLAYER_SPRINT_SPEED
+const JUMP_VELOCITY: float = PC.JUMP_VELOCITY
+const GRAVITY: float = PC.GRAVITY
 
 # Stats
 var max_health: float = 100.0
@@ -299,6 +301,8 @@ func _update_cooldowns(delta: float) -> void:
 func _apply_gravity(delta: float) -> void:
 	if not is_on_floor():
 		velocity.y -= GRAVITY * delta
+		# Terminal velocity clamp prevents tunnelling through thin floors
+		velocity.y = max(velocity.y, -PC.MAX_FALL_SPEED)
 	else:
 		jump_count = 0
 
@@ -345,23 +349,29 @@ func _handle_movement_input(delta: float) -> void:
 		jump_pressed = Input.is_action_just_pressed("p2_jump") or _is_key_just_pressed(KEY_SHIFT)
 		is_sprinting = Input.is_key_pressed(KEY_CTRL) or Input.is_physical_key_pressed(KEY_CTRL)
 
-	# Jump handling
+	# Jump handling — single jump on floor, double jump in city-mode only
 	if jump_pressed:
 		if is_on_floor():
-			velocity.y = JUMP_VELOCITY
+			velocity.y = PC.JUMP_VELOCITY
 			jump_count = 1
 			_spawn_ground_dust()
 		elif jump_count < max_jumps and is_city_mode:
-			velocity.y = JUMP_VELOCITY * 1.15
+			# Double jump: override Y, do NOT accumulate
+			velocity.y = PC.DOUBLE_JUMP_VELOCITY
 			jump_count += 1
 			_perform_acrobatic_flip()
 
-	# Movement calculation
+	# Movement calculation — separate air/ground accel for better feel
 	var cur_speed := (SPRINT_SPEED if is_sprinting else SPEED)
 	if is_web_slowed:
 		cur_speed *= 0.5
 		
 	move_vec = move_vec.normalized()
+	
+	# Use lower acceleration in air (air control), higher on ground
+	var on_floor := is_on_floor()
+	var h_accel := PC.PLAYER_ACCEL if on_floor else PC.PLAYER_AIR_ACCEL
+	var h_fric := PC.PLAYER_FRICTION if on_floor else PC.PLAYER_AIR_FRICTION
 	
 	if is_city_mode and camera_ref and is_instance_valid(camera_ref):
 		var cam_basis: Basis = camera_ref.global_transform.basis
@@ -369,18 +379,18 @@ func _handle_movement_input(delta: float) -> void:
 		var rgt := cam_basis.x; rgt.y = 0.0; rgt = rgt.normalized()
 		var target_vel := (rgt * move_vec.x - fwd * move_vec.y) * cur_speed
 		if move_vec.length_squared() > 0.0:
-			velocity.x = move_toward(velocity.x, target_vel.x, cur_speed * 8.0 * delta)
-			velocity.z = move_toward(velocity.z, target_vel.z, cur_speed * 8.0 * delta)
+			velocity.x = move_toward(velocity.x, target_vel.x, cur_speed * h_accel * delta)
+			velocity.z = move_toward(velocity.z, target_vel.z, cur_speed * h_accel * delta)
 		else:
-			velocity.x = move_toward(velocity.x, 0.0, SPEED * 6.0 * delta)
-			velocity.z = move_toward(velocity.z, 0.0, SPEED * 6.0 * delta)
+			velocity.x = move_toward(velocity.x, 0.0, SPEED * h_fric * delta)
+			velocity.z = move_toward(velocity.z, 0.0, SPEED * h_fric * delta)
 	else:
 		if move_vec.length_squared() > 0.0:
-			velocity.x = move_toward(velocity.x, move_vec.x * cur_speed, cur_speed * 8.0 * delta)
-			velocity.z = move_toward(velocity.z, move_vec.y * cur_speed, cur_speed * 8.0 * delta)
+			velocity.x = move_toward(velocity.x, move_vec.x * cur_speed, cur_speed * h_accel * delta)
+			velocity.z = move_toward(velocity.z, move_vec.y * cur_speed, cur_speed * h_accel * delta)
 		else:
-			velocity.x = move_toward(velocity.x, 0.0, SPEED * 6.0 * delta)
-			velocity.z = move_toward(velocity.z, 0.0, SPEED * 6.0 * delta)
+			velocity.x = move_toward(velocity.x, 0.0, SPEED * h_fric * delta)
+			velocity.z = move_toward(velocity.z, 0.0, SPEED * h_fric * delta)
 
 func _handle_combat_input() -> void:
 	if is_attacking:
@@ -444,9 +454,10 @@ func _perform_web_pull() -> void:
 	# Draw visible web cable
 	_draw_tether_beam(target_pt, Color(0.95, 0.98, 1.0))
 	
-	# Slingshot impulse
+	# Slingshot impulse — clamped to traversal speed cap
 	var pull_dir := (target_pt - global_position).normalized()
-	velocity = pull_dir * 26.0 + Vector3.UP * 12.0
+	var impulse := pull_dir * PC.WEB_PULL_SPEED + Vector3.UP * PC.WEB_PULL_LIFT
+	velocity = impulse.limit_length(PC.TRAVERSAL_SPEED_CAP)
 	traversal_triggered.emit("web_pull", target_pt)
 
 func _perform_grapple_dash() -> void:
@@ -466,9 +477,10 @@ func _perform_grapple_dash() -> void:
 	# Draw grapple steel line
 	_draw_tether_beam(target_pt, Color(0.3, 0.75, 1.0))
 	
-	# Boost impulse
+	# Boost impulse — clamped to traversal speed cap
 	var pull_dir := (target_pt - global_position).normalized()
-	velocity = pull_dir * 24.0 + Vector3.UP * 10.0
+	var impulse := pull_dir * PC.GRAPPLE_SPEED + Vector3.UP * PC.GRAPPLE_LIFT
+	velocity = impulse.limit_length(PC.TRAVERSAL_SPEED_CAP)
 	traversal_triggered.emit("grapple", target_pt)
 
 func _draw_tether_beam(target_point: Vector3, color: Color) -> void:
@@ -783,6 +795,6 @@ func _perform_acrobatic_flip() -> void:
 		tw.tween_callback(func(): mesh_root.rotation.x = 0.0)
 
 func _clamp_to_arena_bounds() -> void:
-	var bound_limit: float = 14.5
+	var bound_limit: float = PC.ARENA_BOUND
 	global_position.x = clamp(global_position.x, -bound_limit, bound_limit)
 	global_position.z = clamp(global_position.z, -bound_limit, bound_limit)

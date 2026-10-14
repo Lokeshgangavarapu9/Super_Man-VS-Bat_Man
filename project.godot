@@ -114,3 +114,13 @@ p2_special={
 3d_physics/layer_3="Player2"
 3d_physics/layer_4="AttackP1"
 3d_physics/layer_5="AttackP2"
+3d_physics/layer_6="NPC"
+3d_physics/layer_7="HostileNPC"
+3d_physics/layer_8="Vehicle"
+3d_physics/layer_9="Collectible"
+
+[physics]
+
+3d/default_gravity=24.0
+3d/default_gravity_vector=Vector3(0, -1, 0)
+

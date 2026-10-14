@@ -1,0 +1,80 @@
+﻿Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+Vulkan 1.4.325 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce RTX 3050 A Laptop GPU
+
+
+===========================================================
+   SUPERHERO SHOWDOWN & CITY — REAL PHYSICS AUDIT SUITE   
+===========================================================
+
+
+--- SECTION 1: CENTRAL PHYSICS CONFIG AUDIT ---
+[PASS] PhysicsConfig Loaded: physics_config.gd loaded as single source of truth
+[PASS] Central Gravity Defined: Central gravity constant = 24.0 m/s²
+[PASS] Terminal Velocity Defined: Terminal fall speed = 55.0 m/s
+[PASS] Player Speed Config: Walk: 8.5 m/s, Sprint: 14.0 m/s
+[PASS] Jump & Double Jump Config: Jump: 9.5 m/s, Double Jump: 10.5 m/s
+[PASS] Traversal Speed Cap: Speed cap after web-pull/grapple = 30.0 m/s
+[PASS] Camera Physics Config: Follow speed: 14.0, Dist: 4.8
+
+--- SECTION 2: PLAYER 3D PHYSICS SIMULATION ---
+[PASS] Player1 Exists in City: Player1 CharacterBody3D active in scene tree
+[PASS] Airborne Gravity Rate: Airborne vertical velocity drop = -2.4 m/s in 0.1s
+[PASS] Terminal Velocity Clamped: High velocity clamped from -100 to -55.0 m/s
+[PASS] Jump Impulse Velocity: Floor jump impulse = 9.5 m/s
+[PASS] Double Jump Distinct: Double jump impulse (10.5) > Single jump (9.5)
+[PASS] Air Control Separate From Ground: Air accel (4.0) < Ground accel (8.0), Air friction (2.5) < Ground friction (6.0)
+[PASS] Traversal Impulse Clamped: Impulse length clamped to 30.0 m/s (was 70.7 m/s)
+
+--- SECTION 3: NPC & VEHICLE PHYSICS SIMULATION ---
+[PASS] Citizen NPC Active: Citizen CharacterBody3D spawned with gravity
+[PASS] Citizen Speed Settings: Citizen walk: 2.4 m/s, run: 5.2 m/s
+[PASS] Hostile NPC Active: Hostile CharacterBody3D spawned in plaza
+[PASS] Hostile Speed Setting: Hostile speed: 4.2 m/s
+[PASS] City Vehicle Active: CityVehicle CharacterBody3D cruising road network
+[PASS] Vehicle Speed Setting: Vehicle cruising speed: 11.0 m/s
+[PASS] Vehicle Steer Speed: Vehicle steer rate: 6.0
+
+--- SECTION 4: ENVIRONMENT & COLLISION ARCHITECTURE ---
+[PASS] Ground StaticBody3D Exists: Master ground platform mounted
+[PASS] Ground Collision Layer 1: Ground resides on Environment layer 1
+[PASS] Ground BoxShape3D Sized: Ground has valid 180x2x180 BoxShape3D
+[PASS] Sky-Piercer Landmark StaticBody3D: Sky-Piercer Tower exists with physics body
+[PASS] Tower Collision Layer 1: Tower on Environment layer 1
+[PASS] Tower BoxShape3D Valid: Tower has solid box collision
+[PASS] High-Rise District Towers: East and West district towers active
+[PASS] Perimeter Void Barriers Built: Found 4 perimeter walls enclosing the city map
+[PASS] Rooftop Traversal Anchors: Found 16 web-pull / grapple rooftop anchors
+
+--- SECTION 5: CAMERA PHYSICS & FOV AUDIT ---
+[PASS] ThirdPersonCamera Initialized: 3D third-person tracking camera mounted
+[PASS] SpringArm3D Collision Active: Camera arm tests collision against Environment layer 1 with margin = 0.25
+[PASS] Camera Spring Length Clamped: Spring arm length default = 4.8 (clamped between 1.5 and 8.0)
+[SCREENSHOT] Saved physics_city_gameplay.png
+
+--- SECTION 6: DOUBLE-PLAYER CITY MODE PHYSICS INDEPENDENCE ---
+[PASS] Dual Players in City: Both Player 1 and Player 2 active in world
+[PASS] Independent Player IDs: P1 ID = 1, P2 ID = 2
+[PASS] Separate Spawn Positions: P1 at (0.0, 10.0), P2 at (4.0, 10.0)
+[PASS] Independent Movement Vectors: P1 and P2 possess discrete velocity channels
+[SCREENSHOT] Saved physics_double_player.png
+
+--- SECTION 7: FIGHTING ARENA COMBAT & BOUNDS AUDIT ---
+[PASS] Arena Scene Loaded: scenes/arena.tscn mounted
+[PASS] Dual Arena Fighters Initialized: Both fighters active on rooftop arena
+[PASS] Arena Bound Clamping: Clamped to (14.5, 14.5) <= limit 14.5
+[PASS] Projectile Speed Setup: Projectile speed = 28.0 m/s
+[PASS] Projectile Lifetime Config: Projectile lifetime = 3.0 s
+[PASS] Knockback Lift Component: Upward lift = 4.5 m/s (from PhysicsConfig)
+[PASS] Knockback Direction Vector: Knockback impulse pushes target away on horizontal plane
+[SCREENSHOT] Saved physics_fighting_gameplay.png
+
+===========================================================
+                 PHYSICS AUDIT RESULTS                    
+===========================================================
+Total Tests: 44
+Passed:      44
+Failed:      0
+===========================================================
+  ✓ ALL PHYSICS AUDIT AND INTEGRATION TESTS PASSED 100%!  
+===========================================================
+

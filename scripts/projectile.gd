@@ -2,11 +2,12 @@ class_name Projectile
 extends Area3D
 
 const CombatScript = preload("res://scripts/combat.gd")
+const PC = preload("res://scripts/physics_config.gd")
 
-@export var speed: float = 24.0
+@export var speed: float = PC.PROJECTILE_SPEED
 @export var damage: float = 15.0
 @export var knockback_force: float = 11.0
-@export var lifetime: float = 3.0
+@export var lifetime: float = PC.PROJECTILE_LIFETIME
 @export var owner_player_id: int = 1
 @export var projectile_type: String = "web" # "web", "shadow", "special_web", "special_shadow"
 
@@ -22,7 +23,7 @@ func _ready() -> void:
 	area_entered.connect(_on_area_entered)
 	_setup_visuals()
 
-func setup(p_owner_id: int, p_type: String, p_direction: Vector3, p_damage: float, p_knockback: float, p_speed: float = 24.0) -> void:
+func setup(p_owner_id: int, p_type: String, p_direction: Vector3, p_damage: float, p_knockback: float, p_speed: float = PC.PROJECTILE_SPEED) -> void:
 	owner_player_id = p_owner_id
 	projectile_type = p_type
 	move_direction = p_direction.normalized()

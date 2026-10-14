@@ -1,7 +1,10 @@
 class_name CityVehicle
 extends CharacterBody3D
 
-@export var speed: float = 11.0
+const PC = preload("res://scripts/physics_config.gd")
+
+@export var speed: float = PC.VEHICLE_SPEED
+@export var steer_speed: float = PC.VEHICLE_STEER_SPEED
 @export var waypoints: Array[Vector3] = []
 @export var vehicle_color: Color = Color(0.2, 0.4, 0.8)
 
@@ -34,7 +37,15 @@ func set_route(points: Array[Vector3]) -> void:
 		global_position = waypoints[0]
 
 func _physics_process(delta: float) -> void:
+	# Always apply gravity when not on the road/floor so cars never float
+	if not is_on_floor():
+		velocity.y -= PC.GRAVITY * delta
+		velocity.y = max(velocity.y, -PC.MAX_FALL_SPEED)
+	else:
+		velocity.y = 0.0
+
 	if waypoints.is_empty():
+		move_and_slide()
 		return
 		
 	var obstacle_detected: bool = false
@@ -44,7 +55,8 @@ func _physics_process(delta: float) -> void:
 			obstacle_detected = true
 			
 	if obstacle_detected:
-		velocity = velocity.move_toward(Vector3.ZERO, delta * 18.0)
+		velocity.x = move_toward(velocity.x, 0.0, delta * 18.0)
+		velocity.z = move_toward(velocity.z, 0.0, delta * 18.0)
 		move_and_slide()
 		return
 		
@@ -60,7 +72,9 @@ func _physics_process(delta: float) -> void:
 	var dir: Vector3 = (target_pt - global_position).normalized()
 	if dir.length_squared() > 0.001:
 		var target_rot: float = atan2(-dir.x, -dir.z)
-		rotation.y = lerp_angle(rotation.y, target_rot, delta * 6.0)
+		rotation.y = lerp_angle(rotation.y, target_rot, delta * steer_speed)
 		
-	velocity = -transform.basis.z * speed
+	var fwd := -transform.basis.z
+	velocity.x = fwd.x * speed
+	velocity.z = fwd.z * speed
 	move_and_slide()

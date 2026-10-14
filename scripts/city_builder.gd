@@ -62,6 +62,31 @@ func _build_ground_and_roads() -> void:
 	_create_road_surface(Vector3(0, 0.03, 40), Vector3(150, 0.02, 0.3), Color(1.0, 0.8, 0.2)) # Yellow divider
 	_create_road_surface(Vector3(0, 0.03, -55), Vector3(150, 0.02, 0.3), Color(1.0, 0.8, 0.2))
 
+	# City perimeter collision boundaries to prevent falling into void
+	_build_perimeter_boundaries()
+
+func _build_perimeter_boundaries() -> void:
+	var bounds := [
+		{"pos": Vector3(-90, 6, 0), "size": Vector3(2, 16, 180)},  # West boundary
+		{"pos": Vector3(90, 6, 0), "size": Vector3(2, 16, 180)},   # East boundary
+		{"pos": Vector3(0, 6, -90), "size": Vector3(180, 16, 2)},  # North boundary
+		{"pos": Vector3(0, 6, 92), "size": Vector3(180, 16, 2)},   # South ocean barrier
+	]
+	for i in range(bounds.size()):
+		var b: Dictionary = bounds[i]
+		var wall := StaticBody3D.new()
+		wall.name = "PerimeterBarrier_%d" % i
+		wall.add_to_group("perimeter_barriers")
+		wall.collision_layer = 1
+		wall.collision_mask = 2 | 4 | 8
+		wall.position = b["pos"]
+		var col := CollisionShape3D.new()
+		var box := BoxShape3D.new()
+		box.size = b["size"]
+		col.shape = box
+		wall.add_child(col)
+		city_root.add_child(wall)
+
 func _create_road_surface(pos: Vector3, size: Vector3, color: Color) -> void:
 	var mesh_inst := MeshInstance3D.new()
 	var box := BoxMesh.new()
@@ -228,6 +253,14 @@ func _create_street_lamp(pos: Vector3) -> void:
 	lamp.collision_layer = 1
 	lamp.position = pos
 	
+	var col := CollisionShape3D.new()
+	var col_shape := CylinderShape3D.new()
+	col_shape.radius = 0.25
+	col_shape.height = 5.0
+	col.shape = col_shape
+	col.position = Vector3(0, 2.5, 0)
+	lamp.add_child(col)
+	
 	var pole := MeshInstance3D.new()
 	var cyl := CylinderMesh.new()
 	cyl.top_radius = 0.08
@@ -342,6 +375,13 @@ func _create_antenna(pos: Vector3, h: float) -> void:
 	var ant := StaticBody3D.new()
 	ant.collision_layer = 1
 	ant.position = pos
+	
+	var col := CollisionShape3D.new()
+	var col_shape := CylinderShape3D.new()
+	col_shape.radius = 0.35
+	col_shape.height = h
+	col.shape = col_shape
+	ant.add_child(col)
 	var m := MeshInstance3D.new()
 	var cyl := CylinderMesh.new()
 	cyl.top_radius = 0.12

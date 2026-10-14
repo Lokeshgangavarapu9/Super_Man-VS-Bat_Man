@@ -8,8 +8,10 @@ enum State {
 	PANIC_FLEE
 }
 
-@export var walk_speed: float = 2.4
-@export var run_speed: float = 5.2
+const PC = preload("res://scripts/physics_config.gd")
+
+@export var walk_speed: float = PC.NPC_WALK_SPEED
+@export var run_speed: float = PC.NPC_RUN_SPEED
 @export var waypoints: Array[Vector3] = []
 
 @onready var mesh_root: Node3D = $MeshRoot
@@ -54,7 +56,8 @@ func trigger_panic(danger_origin: Vector3) -> void:
 
 func _physics_process(delta: float) -> void:
 	if not is_on_floor():
-		velocity.y -= 20.0 * delta
+		velocity.y -= PC.GRAVITY * delta
+		velocity.y = max(velocity.y, -PC.MAX_FALL_SPEED)
 		
 	match current_state:
 		State.IDLE:
