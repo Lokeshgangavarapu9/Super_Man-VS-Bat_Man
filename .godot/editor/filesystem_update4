@@ -10,3 +10,4 @@ res://scripts/game_config.gd
 res://city_simulation_test.gd
 res://scripts/city_manager.gd
 res://scripts/third_person_camera.gd
+res://scripts/character_preview.gd

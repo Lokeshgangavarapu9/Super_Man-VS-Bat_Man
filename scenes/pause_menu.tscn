@@ -1,0 +1,213 @@
+[gd_scene load_steps=3 format=3 uid="uid://pause_menu_v1"]
+
+[ext_resource type="Script" path="res://scripts/pause_menu.gd" id="1_pmenu"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dark"]
+bg_color = Color(0.06, 0.08, 0.14, 0.97)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.3, 0.75, 1.0, 0.9)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[node name="PauseMenu" type="CanvasLayer"]
+script = ExtResource("1_pmenu")
+
+[node name="DimBg" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0, 0, 0, 0.6)
+
+[node name="Panel" type="PanelContainer" parent="."]
+theme_override_styles/panel = SubResource("StyleBoxFlat_dark")
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -180.0
+offset_top = -220.0
+offset_right = 180.0
+offset_bottom = 220.0
+
+[node name="VBox" type="VBoxContainer" parent="Panel"]
+layout_mode = 2
+theme_override_constants/separation = 12
+offset_left = 24
+offset_top = 24
+offset_right = -24
+offset_bottom = -24
+
+[node name="PauseTitle" type="Label" parent="Panel/VBox"]
+layout_mode = 2
+text = "PAUSED"
+theme_override_font_sizes/font_size = 28
+theme_override_colors/font_color = Color(0.3, 0.8, 1.0, 1.0)
+horizontal_alignment = 1
+
+[node name="Sep" type="HSeparator" parent="Panel/VBox"]
+layout_mode = 2
+
+[node name="ResumeBtn" type="Button" parent="Panel/VBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 50)
+text = "RESUME"
+theme_override_font_sizes/font_size = 18
+
+[node name="SettingsBtn" type="Button" parent="Panel/VBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 50)
+text = "SETTINGS"
+theme_override_font_sizes/font_size = 18
+
+[node name="MainMenuBtn" type="Button" parent="Panel/VBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 50)
+text = "MAIN MENU"
+theme_override_font_sizes/font_size = 18
+
+[node name="ExitBtn" type="Button" parent="Panel/VBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 50)
+text = "EXIT GAME"
+theme_override_font_sizes/font_size = 18
+theme_override_colors/font_color = Color(1.0, 0.35, 0.35, 1.0)
+
+[node name="SettingsPanel" type="PanelContainer" parent="."]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 60
+offset_top = 40
+offset_right = -60
+offset_bottom = -40
+
+[node name="VBox" type="VBoxContainer" parent="SettingsPanel"]
+layout_mode = 2
+theme_override_constants/separation = 10
+offset_left = 24
+offset_top = 16
+offset_right = -24
+offset_bottom = -16
+
+[node name="SettingsTitle" type="Label" parent="SettingsPanel/VBox"]
+layout_mode = 2
+text = "SETTINGS"
+theme_override_font_sizes/font_size = 26
+theme_override_colors/font_color = Color(1.0, 0.6, 0.1, 1.0)
+horizontal_alignment = 1
+
+[node name="TabRow" type="HBoxContainer" parent="SettingsPanel/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="TabAudio" type="Button" parent="SettingsPanel/VBox/TabRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "AUDIO"
+theme_override_font_sizes/font_size = 15
+
+[node name="TabDisplay" type="Button" parent="SettingsPanel/VBox/TabRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "DISPLAY"
+theme_override_font_sizes/font_size = 15
+
+[node name="TabControls" type="Button" parent="SettingsPanel/VBox/TabRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "CONTROLS"
+theme_override_font_sizes/font_size = 15
+
+[node name="Content" type="MarginContainer" parent="SettingsPanel/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="AudioTab" type="VBoxContainer" parent="SettingsPanel/VBox/Content"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="MasterRow" type="HBoxContainer" parent="SettingsPanel/VBox/Content/AudioTab"]
+layout_mode = 2
+
+[node name="MasterLabel" type="Label" parent="SettingsPanel/VBox/Content/AudioTab/MasterRow"]
+layout_mode = 2
+custom_minimum_size = Vector2(180, 0)
+text = "Master Volume"
+theme_override_font_sizes/font_size = 16
+
+[node name="MasterSlider" type="HSlider" parent="SettingsPanel/VBox/Content/AudioTab/MasterRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = 0.0
+max_value = 1.0
+step = 0.05
+value = 0.8
+
+[node name="SfxRow" type="HBoxContainer" parent="SettingsPanel/VBox/Content/AudioTab"]
+layout_mode = 2
+
+[node name="SfxLabel" type="Label" parent="SettingsPanel/VBox/Content/AudioTab/SfxRow"]
+layout_mode = 2
+custom_minimum_size = Vector2(180, 0)
+text = "SFX Volume"
+theme_override_font_sizes/font_size = 16
+
+[node name="SfxSlider" type="HSlider" parent="SettingsPanel/VBox/Content/AudioTab/SfxRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = 0.0
+max_value = 1.0
+step = 0.05
+value = 0.9
+
+[node name="DisplayTab" type="VBoxContainer" parent="SettingsPanel/VBox/Content"]
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="DisplayInfo" type="Label" parent="SettingsPanel/VBox/Content/DisplayTab"]
+layout_mode = 2
+text = "Resolution: 1280x720 (Windowed)\nVSync: Enabled\nAnti-Aliasing: FXAA\n\nFull display settings are available\nin the project launch options."
+theme_override_font_sizes/font_size = 15
+theme_override_colors/font_color = Color(0.75, 0.8, 0.9, 1.0)
+
+[node name="ControlsTab" type="VBoxContainer" parent="SettingsPanel/VBox/Content"]
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="SensRow" type="HBoxContainer" parent="SettingsPanel/VBox/Content/ControlsTab"]
+layout_mode = 2
+
+[node name="SensLabel" type="Label" parent="SettingsPanel/VBox/Content/ControlsTab/SensRow"]
+layout_mode = 2
+custom_minimum_size = Vector2(180, 0)
+text = "Mouse Sensitivity"
+theme_override_font_sizes/font_size = 16
+
+[node name="SensSlider" type="HSlider" parent="SettingsPanel/VBox/Content/ControlsTab/SensRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = 0.0005
+max_value = 0.01
+step = 0.0005
+value = 0.003
+
+[node name="ControlsInfo" type="Label" parent="SettingsPanel/VBox/Content/ControlsTab"]
+layout_mode = 2
+text = "CITY MODE:\n  WASD — Move  |  Mouse — Look  |  Shift — Sprint\n  Space — Jump (double-jump)  |  F — Strike\n  G — Ranged  |  H — Special  |  R/RMB — Traversal\n  E — Interact  |  ESC — Pause\n\nARENT MODE P1:\n  WASD — Move  |  Space — Jump  |  F — Punch\n  G — Web/Batarang  |  H — Special\n\nARENA MODE P2:\n  IJKL — Move  |  U — Jump  |  K — Punch\n  L — Ranged  |  J — Special"
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.75, 0.85, 1.0, 1.0)
+
+[node name="CloseSettingsBtn" type="Button" parent="SettingsPanel/VBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 44)
+text = "BACK TO PAUSE MENU"
+theme_override_font_sizes/font_size = 16
