@@ -3,7 +3,7 @@
 ## Collision Layer Definitions
 
 | Layer Bit | Value | Name | Description | Entities Assigned |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | **Layer 1** | `1` | `Environment` | Static ground, roads, buildings, rooftops, barriers, and city props | Ground plane, building colliders, plaza surfaces, perimeter barriers, SpringArm collision |
 | **Layer 2** | `2` | `Player 1` | Primary player character physical body | Player 1 `CharacterBody3D` |
 | **Layer 3** | `4` | `Player 2` | Second player character physical body | Player 2 `CharacterBody3D` (Co-op / Local 1v1) |
@@ -20,7 +20,7 @@
 ## Collision Mask Matrix (Who Collides With What)
 
 | Entity | Layer | Mask | Interaction Rationale |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | **Player 1** | 2 | 1 \| 4 \| 64 \| 128 | Collides with Environment (1), Player 2 (4), Hostile NPCs (64), and Vehicles (128). |
 | **Player 2** | 4 | 1 \| 2 \| 64 \| 128 | Collides with Environment (1), Player 1 (2), Hostile NPCs (64), and Vehicles (128). |
 | **P1 Melee Hitbox** | 8 | 4 \| 64 | Overlaps and damages Player 2 (4) and Hostiles (64). Does NOT hit citizens or static walls. |

@@ -1,6 +1,7 @@
 # Graphics & Atmospheric Changes
 
 ## Overview
+
 Visual quality and atmosphere have been upgraded inspired by the coastal aesthetics of GTA-mini and Vice City, while maintaining 100% original geometry and shaders without copyrighted assets.
 
 ---
@@ -8,6 +9,7 @@ Visual quality and atmosphere have been upgraded inspired by the coastal aesthet
 ## Key Graphics Improvements
 
 ### 1. Environment & Lighting
+
 - **WorldEnvironment:**
   - Upgraded to ACES Filmic tonemapper with 1.05 exposure for cinematic contrast.
   - Added subtle bloom/glow (`intensity = 0.35`, `bloom = 0.12`).
@@ -18,6 +20,7 @@ Visual quality and atmosphere have been upgraded inspired by the coastal aesthet
   - PSSM 4-Split directional shadows configured with `250.0m` max distance and `1.2` shadow blur.
 
 ### 2. City Surfaces & Props
+
 - **Asphalt & Roadway Markings:**
   - Dark slate asphalt material (`Color(0.14, 0.16, 0.18)`, roughness `0.8`).
   - Elevated double-yellow dividing lines and crosswalks.
@@ -27,5 +30,6 @@ Visual quality and atmosphere have been upgraded inspired by the coastal aesthet
   - Palm trees, decorative planters, and street lamp posts in central plaza.
 
 ### 3. Character Previews
+
 - Character-selection screens in both **Single Player** and **Double Player** feature real 3D SubViewports with dedicated directional key-lights and fill-lights.
 - Dynamic 360° turntable rotation displays the selected hero model (Crimson Weaver or Shadow Knight) with custom stylized materials, glowing eyes/emblems, and capes.

@@ -5,7 +5,7 @@
 All visual verification tests were executed against real running Godot 4.7.2 Forward+ Vulkan window instances.
 
 | Test ID | Test Scenario | Verified Visual Behavior | Status | Evidence Screenshot |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | **VIS-01** | **Main Menu Presentation** | Displays original title "SUPERHERO SHOWDOWN: OPEN-WORLD CITY SANDBOX & FIGHTING ARENA" with 4 primary action buttons: 1. CITY, 2. FIGHTING GAME, 3. SETTINGS, 4. EXIT. Dark charcoal styling with cyan highlight. | **PASS** | [`1_main_menu.png`](file:///c:/Users/LOKESH/gotbot%20game/diagnostics/full_adaptation/screenshots/1_main_menu.png) |
 | **VIS-02** | **City Submenu Routing** | Clicking "1. CITY" cleanly presents Single Player, Double Player, and Back buttons without overlapping or blocking. | **PASS** | [`2_city_submenu.png`](file:///c:/Users/LOKESH/gotbot%20game/diagnostics/full_adaptation/screenshots/2_city_submenu.png) |
 | **VIS-03** | **Single Player Hero Preview** | Selecting Single Player opens hero customization with a live, illuminated, rotating 3D preview of Crimson Weaver or Shadow Knight inside a SubViewport with dedicated directional lighting. | **PASS** | [`3_single_player_preview.png`](file:///c:/Users/LOKESH/gotbot%20game/diagnostics/full_adaptation/screenshots/3_single_player_preview.png) |
@@ -23,11 +23,13 @@ All visual verification tests were executed against real running Godot 4.7.2 For
 The following test suites were executed in headless mode to guarantee strict regression-free code execution:
 
 ### 1. Scene & Script Validation Suite (`test_runner.gd`)
+
 - **Total Validations:** 24/24 (10 scenes, 14 scripts)
 - **Result:** **100% PASS**
 - **Log:** All scenes instantiated successfully; all scripts parsed with 0 errors.
 
 ### 2. Physics & Movement Audit Suite (`diagnostics/repair_and_physics/physics_validation.gd`)
+
 - **Total Tests:** 44/44
 - **Result:** **100% PASS**
 - **Key Verified Systems:**
@@ -41,11 +43,13 @@ The following test suites were executed in headless mode to guarantee strict reg
   - Camera SpringArm collision against Environment layer 1 verified.
 
 ### 3. City Sandbox Simulation Suite (`city_simulation_test.gd`)
+
 - **Total Tests:** 10/10
 - **Result:** **100% PASS**
 - **Verified Systems:** Procedural districts, autonomous traffic, hostile NPC AI & combat responses, Crimson Weaver traversal, Shadow Knight gadgets, collectibles, missions, and double-player split-screen viewports.
 
 ### 4. Fighting Arena Combat Suite (`gameplay_simulation_test.gd`)
+
 - **Total Tests:** 9/9
 - **Result:** **100% PASS**
 - **Verified Systems:** Fighter initialization, arena boundary clamping, opponent facing, jump gravity, melee hitboxes, projectiles, special attacks, dual health bars, and defeat/victory triggers.

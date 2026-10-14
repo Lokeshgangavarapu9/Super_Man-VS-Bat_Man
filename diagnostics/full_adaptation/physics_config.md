@@ -1,6 +1,7 @@
 # Authoritative Gameplay Physics Configuration
 
 ## Configuration Source
+
 - **Resource Definition:** [`scripts/gameplay_physics_config.gd`](file:///c:/Users/LOKESH/gotbot%20game/scripts/gameplay_physics_config.gd)
 - **Default Resource Instance:** [`data/gameplay_physics_config.tres`](file:///c:/Users/LOKESH/gotbot%20game/data/gameplay_physics_config.tres)
 - **Script Interface & Aliases:** [`scripts/physics_config.gd`](file:///c:/Users/LOKESH/gotbot%20game/scripts/physics_config.gd)
@@ -10,7 +11,7 @@
 ## Complete Parameter Reference
 
 | Category | Parameter Name | Value | Unit | Description |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | **Gravity & Fall** | `gravity` | `24.0` | m/s² | Downward acceleration applied to CharacterBody3D when `not is_on_floor()`. |
 | | `terminal_fall_speed` | `55.0` | m/s | Maximum downward fall velocity. Prevents tunneling through geometry. |
 | **Player Movement** | `walk_speed` | `8.5` | m/s | Base ground walking speed. |
@@ -56,24 +57,33 @@
 ## Applied Movement Equations
 
 1. **Vertical Gravity:**
+
    ```gdscript
    velocity.y = max(velocity.y - gravity * delta, -terminal_fall_speed)
    ```
+
 2. **Horizontal Target Movement:**
+
    ```gdscript
    target_velocity = input_direction * current_speed
    ```
+
 3. **Ground Acceleration:**
+
    ```gdscript
    velocity.x = move_toward(velocity.x, target_velocity.x, acceleration * delta)
    velocity.z = move_toward(velocity.z, target_velocity.z, acceleration * delta)
    ```
+
 4. **No-Input Ground Deceleration:**
+
    ```gdscript
    velocity.x = move_toward(velocity.x, 0.0, deceleration * delta)
    velocity.z = move_toward(velocity.z, 0.0, deceleration * delta)
    ```
+
 5. **Air Control:**
+
    ```gdscript
    var air_accel = acceleration * air_control_multiplier
    velocity.x = move_toward(velocity.x, target_velocity.x, air_accel * delta)
