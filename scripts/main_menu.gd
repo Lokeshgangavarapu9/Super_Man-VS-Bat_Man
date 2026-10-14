@@ -267,7 +267,9 @@ func _update_sp_selection_display() -> void:
 
 func _launch_single_player_city() -> void:
 	GameConfigScript.set_single_player_city(sp_chosen_hero)
-	get_tree().change_scene_to_file("res://scenes/city.tscn")
+	var err := get_tree().change_scene_to_file("res://scenes/city.tscn")
+	if err != OK:
+		push_error("Failed to change scene to city.tscn: %s" % error_string(err))
 
 # --- DOUBLE PLAYER HERO SELECTION ---
 func _select_dp_p1_hero(hero_id: String) -> void:
@@ -293,7 +295,9 @@ func _update_dp_selection_display() -> void:
 
 func _launch_double_player_city() -> void:
 	GameConfigScript.set_double_player_city(dp_p1_hero, dp_p2_hero)
-	get_tree().change_scene_to_file("res://scenes/city.tscn")
+	var err := get_tree().change_scene_to_file("res://scenes/city.tscn")
+	if err != OK:
+		push_error("Failed to change scene to city.tscn: %s" % error_string(err))
 
 # --- FIGHTING ARENA LAUNCH ---
 func _set_arena_diff(diff: int) -> void:
@@ -311,11 +315,15 @@ func _launch_fighting_cpu() -> void:
 	elif arena_diff == 2: diff_enum = GameConfigScript.Difficulty.HARD
 	
 	GameConfigScript.set_arena_mode(true, diff_enum)
-	get_tree().change_scene_to_file("res://scenes/arena.tscn")
+	var err := get_tree().change_scene_to_file("res://scenes/arena.tscn")
+	if err != OK:
+		push_error("Failed to change scene to arena.tscn: %s" % error_string(err))
 
 func _launch_fighting_2p() -> void:
 	GameConfigScript.set_arena_mode(false)
-	get_tree().change_scene_to_file("res://scenes/arena.tscn")
+	var err := get_tree().change_scene_to_file("res://scenes/arena.tscn")
+	if err != OK:
+		push_error("Failed to change scene to arena.tscn: %s" % error_string(err))
 
 # --- SETTINGS LOGIC ---
 func _load_settings_values() -> void:
@@ -406,4 +414,3 @@ func _update_pop_btn_text() -> void:
 func _on_settings_back_pressed() -> void:
 	GameConfigScript.save_game()
 	_show_primary_menu()
-

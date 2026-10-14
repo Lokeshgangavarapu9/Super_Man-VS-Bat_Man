@@ -175,7 +175,9 @@ func _setup_pause_menu() -> void:
 		pause_menu_btn.pressed.connect(func():
 			get_tree().paused = false
 			Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
-			get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
+			var err := get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
+			if err != OK:
+				push_error("Failed to return to main menu from city: %s" % error_string(err))
 		)
 
 func _process(delta: float) -> void:

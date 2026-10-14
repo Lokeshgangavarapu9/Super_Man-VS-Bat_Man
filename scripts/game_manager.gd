@@ -350,7 +350,9 @@ func _on_restart_pressed() -> void:
 
 func _on_menu_pressed() -> void:
 	get_tree().paused = false
-	get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
+	var err := get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
+	if err != OK:
+		push_error("Failed to return to main menu from arena: %s" % error_string(err))
 
 func _on_exit_pressed() -> void:
 	get_tree().quit()

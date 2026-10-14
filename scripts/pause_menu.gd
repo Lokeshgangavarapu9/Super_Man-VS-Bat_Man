@@ -116,7 +116,9 @@ func _on_main_menu() -> void:
 	close()
 	get_tree().paused = false
 	quit_to_menu_requested.emit()
-	get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
+	var err := get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
+	if err != OK:
+		push_error("Failed to return to main menu: %s" % error_string(err))
 
 func _switch_tab(tab: String) -> void:
 	active_tab = tab

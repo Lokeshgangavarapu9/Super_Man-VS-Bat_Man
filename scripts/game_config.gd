@@ -64,20 +64,32 @@ static func apply_all_settings() -> void:
 	apply_audio_settings()
 	apply_graphics_settings()
 
+static func can_control_window() -> bool:
+	if DisplayServer.get_name() == "headless":
+		return false
+	var tree := Engine.get_main_loop() as SceneTree
+	if not tree or not tree.root:
+		return false
+	if tree.root.is_embedded():
+		return false
+	return true
+
 static func apply_display_settings() -> void:
-	match window_mode:
-		0:
-			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
-			DisplayServer.window_set_flag(DisplayServer.WINDOW_FLAG_BORDERLESS, false)
-			if resolution_index >= 0 and resolution_index < RESOLUTIONS.size():
-				DisplayServer.window_set_size(RESOLUTIONS[resolution_index])
-		1:
-			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
-		2:
-			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
-			DisplayServer.window_set_flag(DisplayServer.WINDOW_FLAG_BORDERLESS, true)
+	if can_control_window():
+		match window_mode:
+			0:
+				DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
+				DisplayServer.window_set_flag(DisplayServer.WINDOW_FLAG_BORDERLESS, false)
+				if resolution_index >= 0 and resolution_index < RESOLUTIONS.size():
+					DisplayServer.window_set_size(RESOLUTIONS[resolution_index])
+			1:
+				DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
+			2:
+				DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
+				DisplayServer.window_set_flag(DisplayServer.WINDOW_FLAG_BORDERLESS, true)
+		
+		DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_ENABLED if vsync_enabled else DisplayServer.VSYNC_DISABLED)
 	
-	DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_ENABLED if vsync_enabled else DisplayServer.VSYNC_DISABLED)
 	Engine.max_fps = fps_limit
 
 static func apply_audio_settings() -> void:
