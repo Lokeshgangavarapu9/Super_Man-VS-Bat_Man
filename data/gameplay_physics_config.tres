@@ -1,0 +1,45 @@
+[gd_resource type="Resource" script_class="GameplayPhysicsConfig" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/gameplay_physics_config.gd" id="1_phys"]
+
+[resource]
+script = ExtResource("1_phys")
+gravity = 24.0
+terminal_fall_speed = 55.0
+walk_speed = 8.5
+sprint_speed = 14.0
+acceleration = 50.0
+deceleration = 40.0
+air_control_multiplier = 0.45
+jump_velocity = 9.5
+double_jump_velocity = 10.5
+max_jumps = 2
+coyote_time = 0.15
+jump_buffer = 0.12
+knockback_force = 9.0
+knockback_upward_lift = 4.5
+hit_stun = 0.25
+projectile_speed = 28.0
+projectile_lifetime = 3.0
+vehicle_speed = 11.0
+vehicle_acceleration = 18.0
+vehicle_braking = 26.0
+vehicle_steering = 6.0
+vehicle_grip = 0.95
+traversal_speed_cap = 30.0
+web_force = 26.0
+web_lift = 12.0
+rope_length = 45.0
+traversal_damping = 0.92
+traversal_cooldown = 1.4
+camera_distance = 4.8
+camera_height = 1.6
+camera_sensitivity = 0.003
+min_pitch = -70.0
+max_pitch = 45.0
+camera_smoothing = 10.0
+camera_fov = 75.0
+aim_fov = 55.0
+shoulder_offset = 1.2
+zoom_min = 1.5
+zoom_max = 8.0

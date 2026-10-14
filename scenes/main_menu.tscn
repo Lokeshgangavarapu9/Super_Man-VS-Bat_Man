@@ -619,78 +619,257 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -320.0
-offset_top = -240.0
-offset_right = 320.0
-offset_bottom = 240.0
+offset_left = -380.0
+offset_top = -260.0
+offset_right = 380.0
+offset_bottom = 260.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_modal")
 
 [node name="VBox" type="VBoxContainer" parent="SettingsModal"]
 layout_mode = 2
-theme_override_constants/separation = 14
+theme_override_constants/separation = 12
 
 [node name="Title" type="Label" parent="SettingsModal/VBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.4, 0.85, 1, 1)
-theme_override_font_sizes/font_size = 24
-text = "GAME SETTINGS"
+theme_override_font_sizes/font_size = 22
+text = "SETTINGS & SYSTEM CONFIGURATION"
 horizontal_alignment = 1
 
 [node name="HSeparator" type="HSeparator" parent="SettingsModal/VBox"]
 layout_mode = 2
 
-[node name="Grid" type="GridContainer" parent="SettingsModal/VBox"]
+[node name="TabContainer" type="TabContainer" parent="SettingsModal/VBox"]
 layout_mode = 2
 size_flags_vertical = 3
+current_tab = 0
+
+[node name="Audio" type="VBoxContainer" parent="SettingsModal/VBox/TabContainer"]
+layout_mode = 2
+theme_override_constants/separation = 14
+metadata/_tab_index = 0
+
+[node name="AudioGrid" type="GridContainer" parent="SettingsModal/VBox/TabContainer/Audio"]
+layout_mode = 2
 theme_override_constants/h_separation = 16
 theme_override_constants/v_separation = 12
 columns = 2
 
-[node name="MasterVolLabel" type="Label" parent="SettingsModal/VBox/Grid"]
+[node name="MasterVolLabel" type="Label" parent="SettingsModal/VBox/TabContainer/Audio/AudioGrid"]
 layout_mode = 2
 text = "Master Volume:"
 
-[node name="MasterVolSlider" type="HSlider" parent="SettingsModal/VBox/Grid"]
+[node name="MasterVolSlider" type="HSlider" parent="SettingsModal/VBox/TabContainer/Audio/AudioGrid"]
 layout_mode = 2
 size_flags_horizontal = 3
 max_value = 1.0
 step = 0.05
 value = 0.8
 
-[node name="SfxVolLabel" type="Label" parent="SettingsModal/VBox/Grid"]
+[node name="MusicVolLabel" type="Label" parent="SettingsModal/VBox/TabContainer/Audio/AudioGrid"]
+layout_mode = 2
+text = "Music Volume:"
+
+[node name="MusicVolSlider" type="HSlider" parent="SettingsModal/VBox/TabContainer/Audio/AudioGrid"]
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 1.0
+step = 0.05
+value = 0.7
+
+[node name="SfxVolLabel" type="Label" parent="SettingsModal/VBox/TabContainer/Audio/AudioGrid"]
 layout_mode = 2
 text = "SFX Volume:"
 
-[node name="SfxVolSlider" type="HSlider" parent="SettingsModal/VBox/Grid"]
+[node name="SfxVolSlider" type="HSlider" parent="SettingsModal/VBox/TabContainer/Audio/AudioGrid"]
 layout_mode = 2
 size_flags_horizontal = 3
 max_value = 1.0
 step = 0.05
 value = 0.9
 
-[node name="TrafficLabel" type="Label" parent="SettingsModal/VBox/Grid"]
+[node name="Display" type="VBoxContainer" parent="SettingsModal/VBox/TabContainer"]
+visible = false
 layout_mode = 2
-text = "Traffic Density:"
+theme_override_constants/separation = 14
+metadata/_tab_index = 1
 
-[node name="TrafficToggleBtn" type="Button" parent="SettingsModal/VBox/Grid"]
+[node name="DisplayGrid" type="GridContainer" parent="SettingsModal/VBox/TabContainer/Display"]
 layout_mode = 2
-text = "MEDIUM"
+theme_override_constants/h_separation = 16
+theme_override_constants/v_separation = 12
+columns = 2
 
-[node name="PopLabel" type="Label" parent="SettingsModal/VBox/Grid"]
+[node name="WindowModeLabel" type="Label" parent="SettingsModal/VBox/TabContainer/Display/DisplayGrid"]
 layout_mode = 2
-text = "Citizens Density:"
+text = "Window Mode:"
 
-[node name="PopToggleBtn" type="Button" parent="SettingsModal/VBox/Grid"]
+[node name="WindowModeOption" type="OptionButton" parent="SettingsModal/VBox/TabContainer/Display/DisplayGrid"]
 layout_mode = 2
-text = "MEDIUM"
+selected = 0
+item_count = 3
+popup/item_0/text = "Windowed"
+popup/item_0/id = 0
+popup/item_1/text = "Fullscreen"
+popup/item_1/id = 1
+popup/item_2/text = "Borderless"
+popup/item_2/id = 2
 
-[node name="SensLabel" type="Label" parent="SettingsModal/VBox/Grid"]
+[node name="ResolutionLabel" type="Label" parent="SettingsModal/VBox/TabContainer/Display/DisplayGrid"]
 layout_mode = 2
-text = "Camera Sensitivity:"
+text = "Resolution:"
 
-[node name="SensSlider" type="HSlider" parent="SettingsModal/VBox/Grid"]
+[node name="ResolutionOption" type="OptionButton" parent="SettingsModal/VBox/TabContainer/Display/DisplayGrid"]
+layout_mode = 2
+selected = 1
+item_count = 3
+popup/item_0/text = "1280 × 720 (720p)"
+popup/item_0/id = 0
+popup/item_1/text = "1920 × 1080 (1080p)"
+popup/item_1/id = 1
+popup/item_2/text = "2560 × 1440 (1440p)"
+popup/item_2/id = 2
+
+[node name="VsyncLabel" type="Label" parent="SettingsModal/VBox/TabContainer/Display/DisplayGrid"]
+layout_mode = 2
+text = "Vertical Sync (VSync):"
+
+[node name="VsyncCheckBox" type="CheckBox" parent="SettingsModal/VBox/TabContainer/Display/DisplayGrid"]
+layout_mode = 2
+button_pressed = true
+text = "Enabled"
+
+[node name="FpsLabel" type="Label" parent="SettingsModal/VBox/TabContainer/Display/DisplayGrid"]
+layout_mode = 2
+text = "Target FPS Limit:"
+
+[node name="FpsOption" type="OptionButton" parent="SettingsModal/VBox/TabContainer/Display/DisplayGrid"]
+layout_mode = 2
+selected = 2
+item_count = 5
+popup/item_0/text = "Uncapped"
+popup/item_0/id = 0
+popup/item_1/text = "30 FPS"
+popup/item_1/id = 1
+popup/item_2/text = "60 FPS"
+popup/item_2/id = 2
+popup/item_3/text = "120 FPS"
+popup/item_3/id = 3
+popup/item_4/text = "144 FPS"
+popup/item_4/id = 4
+
+[node name="Graphics" type="VBoxContainer" parent="SettingsModal/VBox/TabContainer"]
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 14
+metadata/_tab_index = 2
+
+[node name="GraphicsGrid" type="GridContainer" parent="SettingsModal/VBox/TabContainer/Graphics"]
+layout_mode = 2
+theme_override_constants/h_separation = 16
+theme_override_constants/v_separation = 12
+columns = 2
+
+[node name="ShadowLabel" type="Label" parent="SettingsModal/VBox/TabContainer/Graphics/GraphicsGrid"]
+layout_mode = 2
+text = "Directional Shadows:"
+
+[node name="ShadowOption" type="OptionButton" parent="SettingsModal/VBox/TabContainer/Graphics/GraphicsGrid"]
+layout_mode = 2
+selected = 2
+item_count = 3
+popup/item_0/text = "Low (1024)"
+popup/item_0/id = 0
+popup/item_1/text = "Medium (2048)"
+popup/item_1/id = 1
+popup/item_2/text = "High (4096)"
+popup/item_2/id = 2
+
+[node name="TrafficLabel" type="Label" parent="SettingsModal/VBox/TabContainer/Graphics/GraphicsGrid"]
+layout_mode = 2
+text = "Vehicle Traffic Density:"
+
+[node name="TrafficToggleBtn" type="Button" parent="SettingsModal/VBox/TabContainer/Graphics/GraphicsGrid"]
+layout_mode = 2
+text = "MEDIUM (4)"
+
+[node name="PopLabel" type="Label" parent="SettingsModal/VBox/TabContainer/Graphics/GraphicsGrid"]
+layout_mode = 2
+text = "Citizen Crowd Density:"
+
+[node name="PopToggleBtn" type="Button" parent="SettingsModal/VBox/TabContainer/Graphics/GraphicsGrid"]
+layout_mode = 2
+text = "MEDIUM (12)"
+
+[node name="PostProcLabel" type="Label" parent="SettingsModal/VBox/TabContainer/Graphics/GraphicsGrid"]
+layout_mode = 2
+text = "Atmospheric Fog & Glow:"
+
+[node name="PostProcCheckBox" type="CheckBox" parent="SettingsModal/VBox/TabContainer/Graphics/GraphicsGrid"]
+layout_mode = 2
+button_pressed = true
+text = "Enabled"
+
+[node name="Controls" type="VBoxContainer" parent="SettingsModal/VBox/TabContainer"]
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 8
+metadata/_tab_index = 3
+
+[node name="ControlsScroll" type="ScrollContainer" parent="SettingsModal/VBox/TabContainer/Controls"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ControlsBox" type="VBoxContainer" parent="SettingsModal/VBox/TabContainer/Controls/ControlsScroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 10
+
+[node name="P1Header" type="Label" parent="SettingsModal/VBox/TabContainer/Controls/ControlsScroll/ControlsBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.4, 0.85, 1, 1)
+text = "PLAYER 1 CONTROLS (KEYBOARD & MOUSE / GAMEPAD)"
+
+[node name="P1Details" type="Label" parent="SettingsModal/VBox/TabContainer/Controls/ControlsScroll/ControlsBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+text = "Move: W, A, S, D  |  Sprint: Left Shift  |  Jump: Spacebar  |  Look: Mouse Motion
+Melee Punch: F / Left Mouse Button  |  Traversal (Web / Grapple): R / Right Mouse Button
+Projectile: G  |  Special Shockwave: H  |  Pause / Menu: ESC"
+
+[node name="HSepCtrl" type="HSeparator" parent="SettingsModal/VBox/TabContainer/Controls/ControlsScroll/ControlsBox"]
+layout_mode = 2
+
+[node name="P2Header" type="Label" parent="SettingsModal/VBox/TabContainer/Controls/ControlsScroll/ControlsBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.65, 0.2, 1)
+text = "PLAYER 2 CONTROLS (SPLIT-SCREEN LOCAL CO-OP / PVP)"
+
+[node name="P2Details" type="Label" parent="SettingsModal/VBox/TabContainer/Controls/ControlsScroll/ControlsBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+text = "Move: Arrow Keys (Up, Down, Left, Right)  |  Sprint: Right Ctrl  |  Jump: Right Shift
+Melee Punch: K  |  Traversal Dash: U  |  Projectile: L  |  Special Attack: J"
+
+[node name="Accessibility" type="VBoxContainer" parent="SettingsModal/VBox/TabContainer"]
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 14
+metadata/_tab_index = 4
+
+[node name="A11yGrid" type="GridContainer" parent="SettingsModal/VBox/TabContainer/Accessibility"]
+layout_mode = 2
+theme_override_constants/h_separation = 16
+theme_override_constants/v_separation = 12
+columns = 2
+
+[node name="SensLabel" type="Label" parent="SettingsModal/VBox/TabContainer/Accessibility/A11yGrid"]
+layout_mode = 2
+text = "Camera Look Sensitivity:"
+
+[node name="SensSlider" type="HSlider" parent="SettingsModal/VBox/TabContainer/Accessibility/A11yGrid"]
 layout_mode = 2
 size_flags_horizontal = 3
 min_value = 0.001
@@ -698,10 +877,37 @@ max_value = 0.008
 step = 0.0005
 value = 0.003
 
+[node name="ShakeLabel" type="Label" parent="SettingsModal/VBox/TabContainer/Accessibility/A11yGrid"]
+layout_mode = 2
+text = "Combat Screen Shake:"
+
+[node name="ShakeCheckBox" type="CheckBox" parent="SettingsModal/VBox/TabContainer/Accessibility/A11yGrid"]
+layout_mode = 2
+button_pressed = true
+text = "Enabled"
+
+[node name="ColorblindLabel" type="Label" parent="SettingsModal/VBox/TabContainer/Accessibility/A11yGrid"]
+layout_mode = 2
+text = "Colorblind Accessibility:"
+
+[node name="ColorblindOption" type="OptionButton" parent="SettingsModal/VBox/TabContainer/Accessibility/A11yGrid"]
+layout_mode = 2
+selected = 0
+item_count = 4
+popup/item_0/text = "None (Standard)"
+popup/item_0/id = 0
+popup/item_1/text = "Protanopia"
+popup/item_1/id = 1
+popup/item_2/text = "Deuteranopia"
+popup/item_2/id = 2
+popup/item_3/text = "Tritanopia"
+popup/item_3/id = 3
+
 [node name="SettingsBackBtn" type="Button" parent="SettingsModal/VBox"]
-custom_minimum_size = Vector2(0, 46)
+custom_minimum_size = Vector2(0, 44)
 layout_mode = 2
 theme_override_font_sizes/font_size = 16
 theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
 theme_override_styles/normal = SubResource("StyleBoxFlat_btn_normal")
-text = "Back"
+text = "Back to Main Menu"
+

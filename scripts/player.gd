@@ -44,6 +44,8 @@ var is_city_mode: bool = false
 var camera_ref: Camera3D = null
 var jump_count: int = 0
 var max_jumps: int = 2
+var coyote_timer: float = 0.0
+var jump_buffer_timer: float = 0.0
 var respawn_position: Vector3 = Vector3(0, 1.2, 0)
 
 # Attack states
@@ -300,10 +302,11 @@ func _update_cooldowns(delta: float) -> void:
 
 func _apply_gravity(delta: float) -> void:
 	if not is_on_floor():
-		velocity.y -= GRAVITY * delta
-		# Terminal velocity clamp prevents tunnelling through thin floors
-		velocity.y = max(velocity.y, -PC.MAX_FALL_SPEED)
+		# Vertical gravity: velocity.y = max(velocity.y - gravity * delta, -terminal_fall_speed)
+		velocity.y = max(velocity.y - GRAVITY * delta, -PC.TERMINAL_FALL_SPEED)
+		coyote_timer = max(0.0, coyote_timer - delta)
 	else:
+		coyote_timer = PC.COYOTE_TIME
 		jump_count = 0
 
 func _is_key_just_pressed(k: Key) -> bool:
@@ -349,48 +352,65 @@ func _handle_movement_input(delta: float) -> void:
 		jump_pressed = Input.is_action_just_pressed("p2_jump") or _is_key_just_pressed(KEY_SHIFT)
 		is_sprinting = Input.is_key_pressed(KEY_CTRL) or Input.is_physical_key_pressed(KEY_CTRL)
 
-	# Jump handling — single jump on floor, double jump in city-mode only
+	# Jump buffer handling
 	if jump_pressed:
-		if is_on_floor():
+		jump_buffer_timer = PC.JUMP_BUFFER
+	elif jump_buffer_timer > 0.0:
+		jump_buffer_timer = max(0.0, jump_buffer_timer - delta)
+
+	# Jump execution with coyote time & double-jump support
+	var can_ground_jump: bool = is_on_floor() or coyote_timer > 0.0
+	if jump_buffer_timer > 0.0:
+		if can_ground_jump and jump_count == 0:
 			velocity.y = PC.JUMP_VELOCITY
 			jump_count = 1
+			coyote_timer = 0.0
+			jump_buffer_timer = 0.0
 			_spawn_ground_dust()
-		elif jump_count < max_jumps and is_city_mode:
+		elif jump_count < max_jumps and is_city_mode and jump_count >= 1:
 			# Double jump: override Y, do NOT accumulate
 			velocity.y = PC.DOUBLE_JUMP_VELOCITY
 			jump_count += 1
+			jump_buffer_timer = 0.0
 			_perform_acrobatic_flip()
 
-	# Movement calculation — separate air/ground accel for better feel
+	# Movement calculation
 	var cur_speed := (SPRINT_SPEED if is_sprinting else SPEED)
 	if is_web_slowed:
 		cur_speed *= 0.5
 		
 	move_vec = move_vec.normalized()
 	
-	# Use lower acceleration in air (air control), higher on ground
+	# Exact movement parameters from authoritative config:
 	var on_floor := is_on_floor()
-	var h_accel := PC.PLAYER_ACCEL if on_floor else PC.PLAYER_AIR_ACCEL
-	var h_fric := PC.PLAYER_FRICTION if on_floor else PC.PLAYER_AIR_FRICTION
+	var acceleration: float = PC.PLAYER_ACCELERATION
+	var deceleration: float = PC.PLAYER_DECELERATION
+	var air_control_multiplier: float = PC.AIR_CONTROL_MULTIPLIER
+	var current_accel: float = acceleration if on_floor else (acceleration * air_control_multiplier)
 	
 	if is_city_mode and camera_ref and is_instance_valid(camera_ref):
 		var cam_basis: Basis = camera_ref.global_transform.basis
 		var fwd := -cam_basis.z; fwd.y = 0.0; fwd = fwd.normalized()
 		var rgt := cam_basis.x; rgt.y = 0.0; rgt = rgt.normalized()
-		var target_vel := (rgt * move_vec.x - fwd * move_vec.y) * cur_speed
+		# Horizontal target movement: target_velocity = input_direction * current_speed
+		var target_velocity := (rgt * move_vec.x - fwd * move_vec.y) * cur_speed
 		if move_vec.length_squared() > 0.0:
-			velocity.x = move_toward(velocity.x, target_vel.x, cur_speed * h_accel * delta)
-			velocity.z = move_toward(velocity.z, target_vel.z, cur_speed * h_accel * delta)
+			# Ground/air acceleration: velocity = move_toward(velocity, target_velocity, acceleration * delta)
+			velocity.x = move_toward(velocity.x, target_velocity.x, current_accel * delta)
+			velocity.z = move_toward(velocity.z, target_velocity.z, current_accel * delta)
 		else:
-			velocity.x = move_toward(velocity.x, 0.0, SPEED * h_fric * delta)
-			velocity.z = move_toward(velocity.z, 0.0, SPEED * h_fric * delta)
+			# No-input ground deceleration: velocity = move_toward(velocity, 0.0, deceleration * delta)
+			velocity.x = move_toward(velocity.x, 0.0, deceleration * delta)
+			velocity.z = move_toward(velocity.z, 0.0, deceleration * delta)
 	else:
 		if move_vec.length_squared() > 0.0:
-			velocity.x = move_toward(velocity.x, move_vec.x * cur_speed, cur_speed * h_accel * delta)
-			velocity.z = move_toward(velocity.z, move_vec.y * cur_speed, cur_speed * h_accel * delta)
+			var target_velocity := Vector3(move_vec.x * cur_speed, 0.0, move_vec.y * cur_speed)
+			velocity.x = move_toward(velocity.x, target_velocity.x, current_accel * delta)
+			velocity.z = move_toward(velocity.z, target_velocity.z, current_accel * delta)
 		else:
-			velocity.x = move_toward(velocity.x, 0.0, SPEED * h_fric * delta)
-			velocity.z = move_toward(velocity.z, 0.0, SPEED * h_fric * delta)
+			velocity.x = move_toward(velocity.x, 0.0, deceleration * delta)
+			velocity.z = move_toward(velocity.z, 0.0, deceleration * delta)
+
 
 func _handle_combat_input() -> void:
 	if is_attacking:

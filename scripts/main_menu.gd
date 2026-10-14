@@ -49,14 +49,28 @@ const GameConfigScript = preload("res://scripts/game_config.gd")
 @onready var fight_2p_btn: Button = $FightingSubmenu/VBox/Fight2PBtn
 @onready var fighting_back_btn: Button = $FightingSubmenu/VBox/FightingBackBtn
 
-# Settings Modal
+# Settings Modal (5-Tab Structure)
 @onready var settings_modal: PanelContainer = $SettingsModal
-@onready var master_vol_slider: HSlider = $SettingsModal/VBox/Grid/MasterVolSlider
-@onready var sfx_vol_slider: HSlider = $SettingsModal/VBox/Grid/SfxVolSlider
-@onready var traffic_toggle_btn: Button = $SettingsModal/VBox/Grid/TrafficToggleBtn
-@onready var pop_toggle_btn: Button = $SettingsModal/VBox/Grid/PopToggleBtn
-@onready var sens_slider: HSlider = $SettingsModal/VBox/Grid/SensSlider
+@onready var settings_tabs: TabContainer = $SettingsModal/VBox/TabContainer
+@onready var master_vol_slider: HSlider = $SettingsModal/VBox/TabContainer/Audio/AudioGrid/MasterVolSlider
+@onready var music_vol_slider: HSlider = $SettingsModal/VBox/TabContainer/Audio/AudioGrid/MusicVolSlider
+@onready var sfx_vol_slider: HSlider = $SettingsModal/VBox/TabContainer/Audio/AudioGrid/SfxVolSlider
+
+@onready var window_mode_option: OptionButton = $SettingsModal/VBox/TabContainer/Display/DisplayGrid/WindowModeOption
+@onready var resolution_option: OptionButton = $SettingsModal/VBox/TabContainer/Display/DisplayGrid/ResolutionOption
+@onready var vsync_check: CheckBox = $SettingsModal/VBox/TabContainer/Display/DisplayGrid/VsyncCheckBox
+@onready var fps_option: OptionButton = $SettingsModal/VBox/TabContainer/Display/DisplayGrid/FpsOption
+
+@onready var shadow_option: OptionButton = $SettingsModal/VBox/TabContainer/Graphics/GraphicsGrid/ShadowOption
+@onready var traffic_toggle_btn: Button = $SettingsModal/VBox/TabContainer/Graphics/GraphicsGrid/TrafficToggleBtn
+@onready var pop_toggle_btn: Button = $SettingsModal/VBox/TabContainer/Graphics/GraphicsGrid/PopToggleBtn
+@onready var post_proc_check: CheckBox = $SettingsModal/VBox/TabContainer/Graphics/GraphicsGrid/PostProcCheckBox
+
+@onready var sens_slider: HSlider = $SettingsModal/VBox/TabContainer/Accessibility/A11yGrid/SensSlider
+@onready var shake_check: CheckBox = $SettingsModal/VBox/TabContainer/Accessibility/A11yGrid/ShakeCheckBox
+@onready var colorblind_option: OptionButton = $SettingsModal/VBox/TabContainer/Accessibility/A11yGrid/ColorblindOption
 @onready var settings_back_btn: Button = $SettingsModal/VBox/SettingsBackBtn
+
 
 # Styles for active vs inactive buttons
 var style_active: StyleBoxFlat = null
@@ -141,13 +155,26 @@ func _connect_signals() -> void:
 	fight_2p_btn.pressed.connect(_launch_fighting_2p)
 	fighting_back_btn.pressed.connect(_show_primary_menu)
 	
-	# Settings Modal
-	master_vol_slider.value_changed.connect(_on_master_vol_changed)
-	sfx_vol_slider.value_changed.connect(_on_sfx_vol_changed)
-	traffic_toggle_btn.pressed.connect(_on_toggle_traffic)
-	pop_toggle_btn.pressed.connect(_on_toggle_population)
-	sens_slider.value_changed.connect(_on_sens_changed)
-	settings_back_btn.pressed.connect(_on_settings_back_pressed)
+	# Settings Modal (5-Tab Structure)
+	if master_vol_slider: master_vol_slider.value_changed.connect(_on_master_vol_changed)
+	if music_vol_slider: music_vol_slider.value_changed.connect(_on_music_vol_changed)
+	if sfx_vol_slider: sfx_vol_slider.value_changed.connect(_on_sfx_vol_changed)
+	
+	if window_mode_option: window_mode_option.item_selected.connect(_on_window_mode_selected)
+	if resolution_option: resolution_option.item_selected.connect(_on_resolution_selected)
+	if vsync_check: vsync_check.toggled.connect(_on_vsync_toggled)
+	if fps_option: fps_option.item_selected.connect(_on_fps_selected)
+	
+	if shadow_option: shadow_option.item_selected.connect(_on_shadow_selected)
+	if traffic_toggle_btn: traffic_toggle_btn.pressed.connect(_on_toggle_traffic)
+	if pop_toggle_btn: pop_toggle_btn.pressed.connect(_on_toggle_population)
+	if post_proc_check: post_proc_check.toggled.connect(_on_post_proc_toggled)
+	
+	if sens_slider: sens_slider.value_changed.connect(_on_sens_changed)
+	if shake_check: shake_check.toggled.connect(_on_shake_toggled)
+	if colorblind_option: colorblind_option.item_selected.connect(_on_colorblind_selected)
+	if settings_back_btn: settings_back_btn.pressed.connect(_on_settings_back_pressed)
+
 
 # --- NAVIGATION ROUTING ---
 func _show_primary_menu() -> void:
@@ -293,19 +320,70 @@ func _launch_fighting_2p() -> void:
 # --- SETTINGS LOGIC ---
 func _load_settings_values() -> void:
 	if master_vol_slider: master_vol_slider.value = GameConfigScript.master_volume
+	if music_vol_slider: music_vol_slider.value = GameConfigScript.music_volume
 	if sfx_vol_slider: sfx_vol_slider.value = GameConfigScript.sfx_volume
-	if sens_slider: sens_slider.value = GameConfigScript.camera_sensitivity
+	
+	if window_mode_option: window_mode_option.selected = clamp(GameConfigScript.window_mode, 0, 2)
+	if resolution_option: resolution_option.selected = clamp(GameConfigScript.resolution_index, 0, 2)
+	if vsync_check: vsync_check.button_pressed = GameConfigScript.vsync_enabled
+	if fps_option:
+		var fps_indices := {0: 0, 30: 1, 60: 2, 120: 3, 144: 4}
+		fps_option.selected = fps_indices.get(GameConfigScript.fps_limit, 2)
+		
+	if shadow_option: shadow_option.selected = clamp(GameConfigScript.shadow_quality, 0, 2)
+	if post_proc_check: post_proc_check.button_pressed = GameConfigScript.post_processing
 	_update_traffic_btn_text()
 	_update_pop_btn_text()
+	
+	if sens_slider: sens_slider.value = GameConfigScript.camera_sensitivity
+	if shake_check: shake_check.button_pressed = GameConfigScript.screen_shake_enabled
+	if colorblind_option: colorblind_option.selected = clamp(GameConfigScript.colorblind_filter, 0, 3)
 
 func _on_master_vol_changed(val: float) -> void:
 	GameConfigScript.master_volume = val
+	GameConfigScript.apply_audio_settings()
+
+func _on_music_vol_changed(val: float) -> void:
+	GameConfigScript.music_volume = val
+	GameConfigScript.apply_audio_settings()
 
 func _on_sfx_vol_changed(val: float) -> void:
 	GameConfigScript.sfx_volume = val
+	GameConfigScript.apply_audio_settings()
+
+func _on_window_mode_selected(idx: int) -> void:
+	GameConfigScript.window_mode = idx
+	GameConfigScript.apply_display_settings()
+
+func _on_resolution_selected(idx: int) -> void:
+	GameConfigScript.resolution_index = idx
+	GameConfigScript.apply_display_settings()
+
+func _on_vsync_toggled(pressed: bool) -> void:
+	GameConfigScript.vsync_enabled = pressed
+	GameConfigScript.apply_display_settings()
+
+func _on_fps_selected(idx: int) -> void:
+	var limits := [0, 30, 60, 120, 144]
+	if idx >= 0 and idx < limits.size():
+		GameConfigScript.fps_limit = limits[idx]
+	GameConfigScript.apply_display_settings()
+
+func _on_shadow_selected(idx: int) -> void:
+	GameConfigScript.shadow_quality = idx
+	GameConfigScript.apply_graphics_settings()
+
+func _on_post_proc_toggled(pressed: bool) -> void:
+	GameConfigScript.post_processing = pressed
 
 func _on_sens_changed(val: float) -> void:
 	GameConfigScript.camera_sensitivity = val
+
+func _on_shake_toggled(pressed: bool) -> void:
+	GameConfigScript.screen_shake_enabled = pressed
+
+func _on_colorblind_selected(idx: int) -> void:
+	GameConfigScript.colorblind_filter = idx
 
 func _on_toggle_traffic() -> void:
 	GameConfigScript.traffic_density = (GameConfigScript.traffic_density + 1) % 4
@@ -328,3 +406,4 @@ func _update_pop_btn_text() -> void:
 func _on_settings_back_pressed() -> void:
 	GameConfigScript.save_game()
 	_show_primary_menu()
+

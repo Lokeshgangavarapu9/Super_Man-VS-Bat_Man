@@ -34,6 +34,23 @@ static var camera_sensitivity: float = 0.003
 static var day_night_cycle: bool = true
 static var master_volume: float = 0.8
 static var sfx_volume: float = 0.9
+static var music_volume: float = 0.7
+
+# Display & Graphics Settings
+const RESOLUTIONS: Array[Vector2i] = [Vector2i(1280, 720), Vector2i(1920, 1080), Vector2i(2560, 1440)]
+static var window_mode: int = 0           # 0 = Windowed, 1 = Fullscreen, 2 = Borderless
+static var resolution_index: int = 1      # 0 = 720p, 1 = 1080p, 2 = 1440p
+static var vsync_enabled: bool = true
+static var fps_limit: int = 60            # 0 = Uncapped, 30, 60, 120, 144
+static var shadow_quality: int = 2        # 0 = Low, 1 = Medium, 2 = High
+static var view_distance: float = 350.0   # meters
+static var effects_quality: int = 2       # 0 = Low, 1 = Medium, 2 = High
+static var post_processing: bool = true   # Fog & Glow
+
+# Accessibility Settings
+static var screen_shake_enabled: bool = true
+static var colorblind_filter: int = 0     # 0 = None, 1 = Protanopia, 2 = Deuteranopia, 3 = Tritanopia
+static var font_scale: float = 1.0
 
 # Progress / Save Data
 const SAVE_PATH: String = "user://superhero_sandbox_save.json"
@@ -41,6 +58,48 @@ static var collectibles_found: Array = []
 static var missions_completed: Array = []
 static var total_tokens: int = 0
 static var has_continue_save: bool = false
+
+static func apply_all_settings() -> void:
+	apply_display_settings()
+	apply_audio_settings()
+	apply_graphics_settings()
+
+static func apply_display_settings() -> void:
+	match window_mode:
+		0:
+			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
+			DisplayServer.window_set_flag(DisplayServer.WINDOW_FLAG_BORDERLESS, false)
+			if resolution_index >= 0 and resolution_index < RESOLUTIONS.size():
+				DisplayServer.window_set_size(RESOLUTIONS[resolution_index])
+		1:
+			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
+		2:
+			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
+			DisplayServer.window_set_flag(DisplayServer.WINDOW_FLAG_BORDERLESS, true)
+	
+	DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_ENABLED if vsync_enabled else DisplayServer.VSYNC_DISABLED)
+	Engine.max_fps = fps_limit
+
+static func apply_audio_settings() -> void:
+	var master_idx := AudioServer.get_bus_index("Master")
+	if master_idx >= 0:
+		AudioServer.set_bus_volume_db(master_idx, linear_to_db(clampf(master_volume, 0.0001, 1.0)))
+	var sfx_idx := AudioServer.get_bus_index("SFX")
+	if sfx_idx >= 0:
+		AudioServer.set_bus_volume_db(sfx_idx, linear_to_db(clampf(sfx_volume, 0.0001, 1.0)))
+	var music_idx := AudioServer.get_bus_index("Music")
+	if music_idx >= 0:
+		AudioServer.set_bus_volume_db(music_idx, linear_to_db(clampf(music_volume, 0.0001, 1.0)))
+
+static func apply_graphics_settings() -> void:
+	match shadow_quality:
+		0: # Low
+			RenderingServer.directional_shadow_atlas_set_size(1024, true)
+		1: # Medium
+			RenderingServer.directional_shadow_atlas_set_size(2048, true)
+		2: # High
+			RenderingServer.directional_shadow_atlas_set_size(4096, true)
+
 
 static func set_single_player_city(hero: String = HERO_CRIMSON_WEAVER) -> void:
 	mode = GameMode.SINGLE_PLAYER_CITY
@@ -120,7 +179,22 @@ static func save_game() -> void:
 		"p1_hero": p1_hero,
 		"p2_hero": p2_hero,
 		"traffic": traffic_density,
-		"pop": population_density
+		"pop": population_density,
+		"master_vol": master_volume,
+		"sfx_vol": sfx_volume,
+		"music_vol": music_volume,
+		"window_mode": window_mode,
+		"res_idx": resolution_index,
+		"vsync": vsync_enabled,
+		"fps_limit": fps_limit,
+		"shadow_quality": shadow_quality,
+		"view_dist": view_distance,
+		"effects_quality": effects_quality,
+		"post_proc": post_processing,
+		"shake_enabled": screen_shake_enabled,
+		"colorblind": colorblind_filter,
+		"font_scale": font_scale,
+		"camera_sens": camera_sensitivity
 	}
 	var file := FileAccess.open(SAVE_PATH, FileAccess.WRITE)
 	if file:
@@ -144,6 +218,22 @@ static func load_game() -> bool:
 		p2_hero = test_json.get("p2_hero", HERO_SHADOW_KNIGHT)
 		traffic_density = int(test_json.get("traffic", 2))
 		population_density = int(test_json.get("pop", 2))
+		master_volume = float(test_json.get("master_vol", 0.8))
+		sfx_volume = float(test_json.get("sfx_vol", 0.9))
+		music_volume = float(test_json.get("music_vol", 0.7))
+		window_mode = int(test_json.get("window_mode", 0))
+		resolution_index = int(test_json.get("res_idx", 1))
+		vsync_enabled = bool(test_json.get("vsync", true))
+		fps_limit = int(test_json.get("fps_limit", 60))
+		shadow_quality = int(test_json.get("shadow_quality", 2))
+		view_distance = float(test_json.get("view_dist", 350.0))
+		effects_quality = int(test_json.get("effects_quality", 2))
+		post_processing = bool(test_json.get("post_proc", true))
+		screen_shake_enabled = bool(test_json.get("shake_enabled", true))
+		colorblind_filter = int(test_json.get("colorblind", 0))
+		font_scale = float(test_json.get("font_scale", 1.0))
+		camera_sensitivity = float(test_json.get("camera_sens", 0.003))
 		has_continue_save = true
+		apply_all_settings()
 		return true
 	return false
