@@ -1,0 +1,14 @@
+# Godot 4+ specific ignores
+.godot/
+*.translation
+
+# Imported assets cache
+.import/
+
+# Mono / C# specific
+.mono/
+*.csproj
+*.sln
+
+# Reference repositories clone directory (temporary external code)
+third_party/reference_repos/

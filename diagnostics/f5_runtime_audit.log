@@ -6,7 +6,7 @@ Accessibility: AccessKit driver loaded.
 WARNING: GENERAL - Message Id Number: 0 | Message Id Name: Loader Message
 	windows_read_data_files_in_registry: Registry lookup failed to get layer manifest files.
 	Objects - 1
-		Object[0] - VK_OBJECT_TYPE_INSTANCE, Handle 3145942273728
+		Object[0] - VK_OBJECT_TYPE_INSTANCE, Handle 2451351899712
    at: _debug_messenger_callback (drivers/vulkan/rendering_context_driver_vulkan.cpp:654)
 Accessibility: window 0 adapter created.
 Devices:
@@ -365,3 +365,36 @@ Shader 'SmaaWeightCalculationShaderRD' (group 0) SHA256: de1d49d5ff947e8b8382f43
 Loading cache for shader SmaaWeightCalculationShaderRD, variant 0
 Shader 'SmaaBlendingShaderRD' (group 0) SHA256: d7b7c8cec00f24f9aa8db356b4df88c5fe032d38ce38673bd520c280c936fb80
 Loading cache for shader SmaaBlendingShaderRD, variant 0
+Shader 'TonemapShaderRD' (group 0) SHA256: 1b9049fef136690ef56085339cc9ad699de6d63e5d3afa1677201c6dedd6f2a8
+Loading cache for shader TonemapShaderRD, variant 0
+Loading cache for shader TonemapShaderRD, variant 1
+Loading cache for shader TonemapShaderRD, variant 2
+Loading cache for shader TonemapShaderRD, variant 3
+Shader 'VrsShaderRD' (group 0) SHA256: fa59a74699f8241cd3f8174eaef045dc8d40f3b29bf36af5414713c289f82717
+Loading cache for shader VrsShaderRD, variant 0
+Loading cache for shader VrsShaderRD, variant 2
+Loading cache for shader VrsShaderRD, variant 3
+Shader 'FsrUpscaleShaderRD' (group 0) SHA256: a8da3dfed3e309742ca78c4162d15f2ab08af4f694a51407089ecec1d1be54be
+Loading cache for shader FsrUpscaleShaderRD, variant 0
+Loading cache for shader FsrUpscaleShaderRD, variant 1
+Shader 'ResolveShaderRD' (group 0) SHA256: 58e536c56eaff31a31ef93f224579af7b242a06469b7b0a7736cdeb7e16898b6
+Loading cache for shader ResolveShaderRD, variant 0
+Loading cache for shader ResolveShaderRD, variant 1
+Loading cache for shader ResolveShaderRD, variant 2
+Shader 'BlitShaderRD' (group 0) SHA256: ae4daaa7a60bb17ebd7e9de5db9422fb448b52ad89776ae7aa53fee442f7cc60
+WASAPI: Activated output_device using IAudioClient3 interface
+WASAPI: wFormatTag = 65534
+WASAPI: nChannels = 2
+WASAPI: nSamplesPerSec = 48000
+WASAPI: nAvgBytesPerSec = 384000
+WASAPI: nBlockAlign = 8
+WASAPI: wBitsPerSample = 32
+WASAPI: cbSize = 22
+WASAPI: mix_rate = 48000
+WASAPI: fundamental_period_frames = 480
+WASAPI: min_period_frames = 480
+WASAPI: max_period_frames = 480
+WASAPI: selected a period frame size of 480
+WASAPI: detected 2 channels
+WASAPI: audio buffer frames: 480 calculated latency: 10ms
+
